@@ -39,6 +39,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,28 +51,50 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccesoDatos\CategoriaDAO.cs" />
-    <Compile Include="AccesoDatos\MovimientoDAO.cs" />
-    <Compile Include="AccesoDatos\ArticuloDAO.cs" />
+    <Compile Include="AccesoDatos\CategoriaDA.cs" />
+    <Compile Include="AccesoDatos\UbicacionDA.cs" />
+    <Compile Include="AccesoDatos\MovimientoDA.cs" />
+    <Compile Include="AccesoDatos\ArticuloDA.cs" />
     <Compile Include="AccesoDatos\ConexionBD.cs" />
-    <Compile Include="LogicaNegocio\ArticuloService.cs" />
-    <Compile Include="LogicaNegocio\ReporteService.cs" />
-    <Compile Include="LogicaNegocio\NotificacionesService.cs" />
-    <Compile Include="LogicaNegocio\MovimientoService.cs" />
+    <Compile Include="Modelos\Subcategoria.cs" />
+    <Compile Include="Validaciones\ArticuloValid.cs" />
+    <Compile Include="Validaciones\ReporteValid.cs" />
+    <Compile Include="Validaciones\NotificacionesValid.cs" />
+    <Compile Include="Validaciones\MovimientoValid.cs" />
     <Compile Include="Modelos\Categoria.cs" />
+    <Compile Include="Modelos\Seccion.cs" />
+    <Compile Include="Modelos\Estante.cs" />
     <Compile Include="Modelos\Ubicacion.cs" />
     <Compile Include="Modelos\Movimiento.cs" />
     <Compile Include="Modelos\Articulo.cs" />
+    <Compile Include="Presentación\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentación\Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentación\FrmAltaArticulo.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Presentación\FrmAltaArticulo.Designer.cs">
       <DependentUpon>FrmAltaArticulo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentación\ArticuloCard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentación\ArticuloCard.Designer.cs">
+      <DependentUpon>ArticuloCard.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Presentación\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Presentación\FrmAltaArticulo.resx">
       <DependentUpon>FrmAltaArticulo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentación\ArticuloCard.resx">
+      <DependentUpon>ArticuloCard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

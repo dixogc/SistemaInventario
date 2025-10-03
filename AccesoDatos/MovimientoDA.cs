@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SistemaInventario.AccesoDatos
 {
-    internal class CategoriaDAO
+    internal class MovimientoDA
     {
     }
 }

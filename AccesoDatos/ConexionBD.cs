@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 
 namespace SistemaInventario.AccesoDatos
 {
     internal class ConexionBD
     {
-        private static string baseDeDatos = "server=localhost;user=root;password=4305;database=almacen;";
+        private static string baseDeDatos = "Data Source=(localdb)\\MSSQLLocalDB;Database=almacen;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;TrustServerCertificate=False;Application Name=\"SQL Server Management Studio\"";
 
-        public static MySqlConnection ObtenerConexion()
+        public static SqlConnection ObtenerConexion()
         {
-            return new MySqlConnection(baseDeDatos);
+            return new SqlConnection(baseDeDatos);
         }
     }
 }

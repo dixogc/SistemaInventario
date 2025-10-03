@@ -1,19 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SistemaInventario.Modelos
 {
-    public class Articulo
+    internal class Seccion
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
-        public string Descripcion { get; set; }
-        public int Stock { get; set; }
-        public int Subcategoria { get; set; }
-        public int Ubicacion {  get; set; }
     }
-
-    
 }

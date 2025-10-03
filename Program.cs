@@ -17,7 +17,7 @@ namespace SistemaInventario
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmAltaArticulo());
+            Application.Run(new Form1());
         }
     }
 }

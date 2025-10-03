@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections;
 
 namespace SistemaInventario.Modelos
 {
-    internal class Categoria
+    internal class Estante
     {
-        public int Id { get; set; }
-        public string Nombre {  get; set; }
+        public int Id {  get; set; }
+        public string Nombre { get; set; }
     }
 }

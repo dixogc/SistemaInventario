@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SistemaInventario.LogicaNegocio
 {
-    internal class NotificacionesService
+    internal class NotificacionesValid
     {
     }
 }
