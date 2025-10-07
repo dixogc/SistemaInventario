@@ -14,11 +14,13 @@ namespace SistemaInventario.Presentación
 {
     public partial class ArticuloCard : UserControl
     {
+        public Articulo Articulo { get; set; }
         public ArticuloCard(Articulo articulo)
         {
             InitializeComponent();
             Subcategoria subcategoria = CategoriaDA.ObtenerSubcategoriaPorId(articulo.Subcategoria);
             string descripcionUbicacion = UbicacionDA.ObtenerDescripcionUbicacion(articulo.Ubicacion);
+            Articulo = articulo;
             lblNombre.Text = articulo.Nombre;
             lblDescripcion.Text = articulo.Descripcion;
             lblStock.Text = articulo.Stock.ToString();
@@ -30,6 +32,17 @@ namespace SistemaInventario.Presentación
         private void UserControl1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnEditarArticulo_Click(object sender, EventArgs e)
+        {
+            FrmEditarArticulo(Articulo);
+        }
+
+        private void FrmEditarArticulo(Articulo articulo)
+        {
+            FrmEditarArticulo frmEditarArticulo = new FrmEditarArticulo(articulo);
+            frmEditarArticulo.Show();
         }
     }
 }

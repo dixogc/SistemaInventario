@@ -57,6 +57,12 @@
     <Compile Include="AccesoDatos\ArticuloDA.cs" />
     <Compile Include="AccesoDatos\ConexionBD.cs" />
     <Compile Include="Modelos\Subcategoria.cs" />
+    <Compile Include="Presentación\FrmEditarArticulo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentación\FrmEditarArticulo.Designer.cs">
+      <DependentUpon>FrmEditarArticulo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Validaciones\ArticuloValid.cs" />
     <Compile Include="Validaciones\ReporteValid.cs" />
     <Compile Include="Validaciones\NotificacionesValid.cs" />
@@ -67,11 +73,11 @@
     <Compile Include="Modelos\Ubicacion.cs" />
     <Compile Include="Modelos\Movimiento.cs" />
     <Compile Include="Modelos\Articulo.cs" />
-    <Compile Include="Presentación\Form1.cs">
+    <Compile Include="Presentación\FrmDashboard.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Presentación\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Presentación\FrmDashboard.Designer.cs">
+      <DependentUpon>FrmDashboard.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentación\FrmAltaArticulo.cs">
       <SubType>Form</SubType>
@@ -87,14 +93,17 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Presentación\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Presentación\FrmDashboard.resx">
+      <DependentUpon>FrmDashboard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentación\FrmAltaArticulo.resx">
       <DependentUpon>FrmAltaArticulo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentación\ArticuloCard.resx">
       <DependentUpon>ArticuloCard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentación\FrmEditarArticulo.resx">
+      <DependentUpon>FrmEditarArticulo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

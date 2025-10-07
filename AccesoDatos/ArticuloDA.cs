@@ -96,7 +96,36 @@ namespace SistemaInventario.AccesoDatos
             }
         }
 
-        public static List<Articulo> ObtenerArticulos(string nombreArticulo)
+        public static List<Articulo> ObtenerTodosLosArticulos()
+        {
+            List<Articulo> articulos = new List<Articulo>();
+            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
+            {
+                conexion.Open();
+                string query = "SELECT * FROM articulos";
+                SqlCommand cmd = new SqlCommand(query, conexion);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        articulos.Add(new Articulo
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("id")),
+                            Nombre = reader.GetString(reader.GetOrdinal("nombre")),
+                            Descripcion = reader.GetString(reader.GetOrdinal("descripcion")),
+                            Stock = reader.GetInt32(reader.GetOrdinal("stock")),
+                            Subcategoria = reader.GetInt32(reader.GetOrdinal("subcategoria_id")),
+                            Ubicacion = reader.GetInt32(reader.GetOrdinal("ubicacion_id"))
+                        });
+                    }
+                }
+                return articulos;
+            }
+        }
+        
+
+        public static List<Articulo> ObtenerArticulosPorNombre(string nombreArticulo)
         {
             List<Articulo> articulos = new List<Articulo>();
             using (SqlConnection conexion = ConexionBD.ObtenerConexion())
@@ -123,6 +152,66 @@ namespace SistemaInventario.AccesoDatos
                 }
                 return articulos;
             }
+        }
+
+        public static List<Articulo> ObtenerArticulosPorCategoria(string nombreArticulo, int idCategoria)
+        {
+            List<Articulo> articulos = new List<Articulo>();
+            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
+            {
+                conexion.Open();
+                string query = "SELECT * FROM articulos WHERE nombre LIKE @nombreBuscado AND subcategoria_id IN (SELECT id FROM subcategoria WHERE categoria_id = @idCategoria)";
+                SqlCommand cmd = new SqlCommand(query, conexion);
+                cmd.Parameters.AddWithValue("nombreBuscado", "%" + nombreArticulo + "%");
+                cmd.Parameters.AddWithValue("@idCategoria", idCategoria);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        articulos.Add(new Articulo
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("id")),
+                            Nombre = reader.GetString(reader.GetOrdinal("nombre")),
+                            Descripcion = reader.GetString(reader.GetOrdinal("descripcion")),
+                            Stock = reader.GetInt32(reader.GetOrdinal("stock")),
+                            Subcategoria = reader.GetInt32(reader.GetOrdinal("subcategoria_id")),
+                            Ubicacion = reader.GetInt32(reader.GetOrdinal("ubicacion_id"))
+                        });
+                    }
+                }
+            }
+            return articulos;
+        }
+
+        public static List<Articulo> ObtenerArticulosPorSubcategoria(string nombreArticulo, int idSubcategoria)
+        {
+            List<Articulo> articulos = new List<Articulo>();
+            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
+            {
+                conexion.Open();
+                string query = "SELECT * FROM articulos WHERE nombre LIKE @nombreBuscado AND subcategoria_id = @idSubcategoria";
+                SqlCommand cmd = new SqlCommand(query, conexion);
+                cmd.Parameters.AddWithValue("nombreBuscado", "%" + nombreArticulo + "%");
+                cmd.Parameters.AddWithValue("@idSubcategoria", idSubcategoria);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        articulos.Add(new Articulo
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("id")),
+                            Nombre = reader.GetString(reader.GetOrdinal("nombre")),
+                            Descripcion = reader.GetString(reader.GetOrdinal("descripcion")),
+                            Stock = reader.GetInt32(reader.GetOrdinal("stock")),
+                            Subcategoria = reader.GetInt32(reader.GetOrdinal("subcategoria_id")),
+                            Ubicacion = reader.GetInt32(reader.GetOrdinal("ubicacion_id"))
+                        });
+                    }
+                }
+            }
+            return articulos;
         }
 
         public static int ObtenerStockActual(int idArticulo)

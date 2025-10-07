@@ -35,6 +35,54 @@ namespace SistemaInventario.AccesoDatos
             }
             return subcategoria;
         }
+        public static List<Subcategoria> ObtenerSubcategoriasPorIdCategoria(int idCategoria)
+        {
+            List<Subcategoria> subcategorias = new List<Subcategoria>();
+            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
+            {
+                conexion.Open();
+                string query = "SELECT id, nombre, categoria_id FROM subcategoria WHERE categoria_id = @id";
+                SqlCommand cmd = new SqlCommand(query, conexion);
+                cmd.Parameters.AddWithValue("@id", idCategoria);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        subcategorias.Add(new Subcategoria
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("id")),
+                            Nombre = reader.GetString(reader.GetOrdinal("nombre")),
+                            Categoria = reader.GetInt32(reader.GetOrdinal("categoria_id"))
+                        });
+                    }
+                }
+            }
+            return subcategorias;
+        }
+
+        public static List<Categoria> ObtenerTodasLasCategorias()
+        {
+            List<Categoria> categorias = new List<Categoria>();
+            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
+            {
+                conexion.Open();
+                string query = "SELECT id, nombre FROM categoria";
+                SqlCommand cmd = new SqlCommand(query, conexion);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        categorias.Add(new Categoria
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("id")),
+                            Nombre = reader.GetString(reader.GetOrdinal("nombre"))
+                        });
+                    }
+                }
+            }
+            return categorias;
+        }
 
         public static List<Subcategoria> ObtenerTodasLasSubCategorias()
         {
@@ -59,26 +107,6 @@ namespace SistemaInventario.AccesoDatos
                 }
             }
             return subcategorias;
-        }
-
-        public static List<string> ObtenerTodasLasSubCategorias(string nombreCategoria)
-        {
-            List<string> subcategorias = new List<string>();
-            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
-            {
-                conexion.Open();
-                string query = "SELECT nombre FROM subcategoria WHERE nombre = @nombreCategoria";
-                SqlCommand cmd = new SqlCommand(query, conexion);
-                cmd.Parameters.AddWithValue("@nombreCategoria", nombreCategoria);
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        subcategorias.Add(reader.GetString(0));
-                    }
-                }
-            }
-            return subcategorias;
-        }
+        } 
     }
 }

@@ -116,6 +116,7 @@
             this.btnEditarArticulo.Size = new System.Drawing.Size(31, 27);
             this.btnEditarArticulo.TabIndex = 8;
             this.btnEditarArticulo.UseVisualStyleBackColor = false;
+            this.btnEditarArticulo.Click += new System.EventHandler(this.btnEditarArticulo_Click);
             // 
             // pictureBoxArticulo
             // 

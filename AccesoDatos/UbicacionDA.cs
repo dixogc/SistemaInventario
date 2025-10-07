@@ -89,6 +89,27 @@ namespace SistemaInventario.AccesoDatos
             else return -1;
         }
 
+        public static int ObtenerSeccionPorIdUbicacion(int idUbicacion)
+        {
+            int idSeccion = 0;
+            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
+            {
+                conexion.Open();
+                string query = "SELECT seccion_id FROM ubicacion WHERE id = @idUbicacion";
+                SqlCommand cmd = new SqlCommand(query, conexion);
+                cmd.Parameters.AddWithValue("idUbicacion", idUbicacion);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        idSeccion = reader.GetInt32(reader.GetOrdinal("seccion_id"));
+                    }
+                }
+            }
+            return idSeccion;
+        }
+
         public static List<Seccion> ObtenerSeccionesUbicacion()
         {
             List<Seccion> secciones = new List<Seccion>();
@@ -111,6 +132,27 @@ namespace SistemaInventario.AccesoDatos
                 }
             }
             return secciones;
+        }
+
+        public static int ObtenerEstantePorIdUbicacion(int idUbicacion)
+        {
+            int idEstante = 0;
+            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
+            {
+                conexion.Open();
+                string query = "SELECT estante_id FROM ubicacion WHERE id = @idUbicacion";
+                SqlCommand cmd = new SqlCommand(query, conexion);
+                cmd.Parameters.AddWithValue("idUbicacion", idUbicacion);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        idEstante = reader.GetInt32(reader.GetOrdinal("estante_id"));
+                    }
+                }
+            }
+            return idEstante;
         }
 
         public static List<Estante> ObtenerEstantesUbicacion()

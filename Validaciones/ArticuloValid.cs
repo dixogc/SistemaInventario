@@ -41,7 +41,7 @@ namespace SistemaInventario.LogicaNegocio
             {
                 throw new Exception("La barra de búsqueda no puede estar vacía");
             }
-            ArticuloDA.ObtenerArticulos(nombreArticulos);
+            ArticuloDA.ObtenerArticulosPorNombre(nombreArticulos);
         }
 
         public void ActualizarStockService(Articulo articulo)
