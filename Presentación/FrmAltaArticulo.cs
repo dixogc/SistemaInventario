@@ -22,26 +22,26 @@ namespace SistemaInventario.Presentación
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            comboBox1.DataSource = CategoriaDA.ObtenerTodasLasSubCategorias();
-            comboBox1.DisplayMember = "Nombre";
-            comboBox1.ValueMember = "Id";
+            cbSubcategoria.DataSource = CategoriaDA.ObtenerTodasLasSubCategorias();
+            cbSubcategoria.DisplayMember = "Nombre";
+            cbSubcategoria.ValueMember = "Id";
 
-            comboBox2.DataSource = UbicacionDA.ObtenerSeccionesUbicacion();
-            comboBox2.DisplayMember = "Nombre";
-            comboBox2.ValueMember = "Id";
+            cbSeccion.DataSource = UbicacionDA.ObtenerSeccionesUbicacion();
+            cbSeccion.DisplayMember = "Nombre";
+            cbSeccion.ValueMember = "Id";
 
-            comboBox3.DataSource = UbicacionDA.ObtenerEstantesUbicacion();
-            comboBox3.DisplayMember = "Nombre";
-            comboBox3.ValueMember = "Id";
+            cbEstante.DataSource = UbicacionDA.ObtenerEstantesUbicacion();
+            cbEstante.DisplayMember = "Nombre";
+            cbEstante.ValueMember = "Id";
 
 
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int idCategoria = (int)comboBox1.SelectedValue;
-            int idSeccion = (int)comboBox2.SelectedValue;
-            int idEstante = (int)comboBox3.SelectedValue;
+            int idCategoria = (int)cbSubcategoria.SelectedValue;
+            int idSeccion = (int)cbSeccion.SelectedValue;
+            int idEstante = (int)cbEstante.SelectedValue;
             int idUbicacion = UbicacionDA.ObtenerUbicacionId(idSeccion, idEstante);
             if(idUbicacion == -1)
             {
@@ -50,9 +50,9 @@ namespace SistemaInventario.Presentación
 
             Articulo art = new Articulo
             {
-                Nombre = textBox2.Text,
-                Descripcion = textBox3.Text,
-                Stock = int.Parse(textBox4.Text),
+                Nombre = txtNombre.Text,
+                Descripcion = txtDescripcion.Text,
+                Stock = int.Parse(txtCantidad.Text),
                 Subcategoria = idCategoria,
                 Ubicacion = idUbicacion
 
@@ -61,6 +61,13 @@ namespace SistemaInventario.Presentación
             ArticuloValid service = new ArticuloValid();
             bool articuloExiste = ArticuloDA.ComprobarExistenciaDeArticulo(art.Nombre);
             service.RegistrarArticuloService(art, articuloExiste);
+
+            txtNombre.Text = "";
+            txtDescripcion.Text = "";
+            txtCantidad.Text = "";
+            cbSubcategoria.SelectedIndex = -1;
+            cbSeccion.SelectedIndex = -1;
+            cbEstante.SelectedIndex = -1;
 
         }
     
@@ -73,6 +80,11 @@ namespace SistemaInventario.Presentación
         private void textBox4_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();   
         }
     }
 }

@@ -45,9 +45,10 @@
             // 
             // txtBuscar
             // 
-            this.txtBuscar.Location = new System.Drawing.Point(176, 28);
+            this.txtBuscar.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBuscar.Location = new System.Drawing.Point(188, 28);
             this.txtBuscar.Name = "txtBuscar";
-            this.txtBuscar.Size = new System.Drawing.Size(200, 20);
+            this.txtBuscar.Size = new System.Drawing.Size(200, 23);
             this.txtBuscar.TabIndex = 0;
             this.txtBuscar.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -78,72 +79,82 @@
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(133, 185);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(394, 418);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(563, 418);
             this.flowLayoutPanel1.TabIndex = 4;
             this.flowLayoutPanel1.WrapContents = false;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(130, 31);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 13);
+            this.label1.Size = new System.Drawing.Size(59, 15);
             this.label1.TabIndex = 5;
             this.label1.Text = "Artículo";
             // 
             // button3
             // 
+            this.button3.BackColor = System.Drawing.Color.Blue;
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.ForeColor = System.Drawing.SystemColors.Control;
             this.button3.Location = new System.Drawing.Point(394, 26);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 6;
             this.button3.Text = "Buscar";
-            this.button3.UseVisualStyleBackColor = true;
+            this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // cbCategorias
             // 
+            this.cbCategorias.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbCategorias.FormattingEnabled = true;
             this.cbCategorias.Location = new System.Drawing.Point(132, 136);
             this.cbCategorias.Name = "cbCategorias";
-            this.cbCategorias.Size = new System.Drawing.Size(121, 21);
+            this.cbCategorias.Size = new System.Drawing.Size(194, 23);
             this.cbCategorias.TabIndex = 18;
             this.cbCategorias.Text = "Categoria";
             this.cbCategorias.SelectedIndexChanged += new System.EventHandler(this.cbCategorias_SelectedIndexChanged);
             // 
             // cbSubcategorias
             // 
+            this.cbSubcategorias.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbSubcategorias.FormattingEnabled = true;
-            this.cbSubcategorias.Location = new System.Drawing.Point(295, 136);
+            this.cbSubcategorias.Location = new System.Drawing.Point(347, 136);
             this.cbSubcategorias.Name = "cbSubcategorias";
-            this.cbSubcategorias.Size = new System.Drawing.Size(121, 21);
+            this.cbSubcategorias.Size = new System.Drawing.Size(251, 23);
             this.cbSubcategorias.TabIndex = 19;
             this.cbSubcategorias.Text = "Subcategoria";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(129, 111);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 13);
+            this.label2.Size = new System.Drawing.Size(79, 15);
             this.label2.TabIndex = 20;
             this.label2.Text = "Categorias";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(292, 111);
+            this.label3.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(344, 111);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(75, 13);
+            this.label3.Size = new System.Drawing.Size(102, 15);
             this.label3.TabIndex = 21;
             this.label3.Text = "Subcategorias";
             // 
             // ckBoxMostrarTodo
             // 
             this.ckBoxMostrarTodo.AutoSize = true;
+            this.ckBoxMostrarTodo.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ckBoxMostrarTodo.Location = new System.Drawing.Point(132, 72);
             this.ckBoxMostrarTodo.Name = "ckBoxMostrarTodo";
-            this.ckBoxMostrarTodo.Size = new System.Drawing.Size(85, 17);
+            this.ckBoxMostrarTodo.Size = new System.Drawing.Size(109, 19);
             this.ckBoxMostrarTodo.TabIndex = 23;
             this.ckBoxMostrarTodo.Text = "Mostrar todo";
             this.ckBoxMostrarTodo.UseVisualStyleBackColor = true;
@@ -151,12 +162,16 @@
             // 
             // btnAplicarFiltros
             // 
-            this.btnAplicarFiltros.Location = new System.Drawing.Point(452, 136);
+            this.btnAplicarFiltros.BackColor = System.Drawing.Color.Green;
+            this.btnAplicarFiltros.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAplicarFiltros.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAplicarFiltros.ForeColor = System.Drawing.SystemColors.Control;
+            this.btnAplicarFiltros.Location = new System.Drawing.Point(621, 136);
             this.btnAplicarFiltros.Name = "btnAplicarFiltros";
             this.btnAplicarFiltros.Size = new System.Drawing.Size(75, 23);
             this.btnAplicarFiltros.TabIndex = 24;
             this.btnAplicarFiltros.Text = "Aplicar filtros";
-            this.btnAplicarFiltros.UseVisualStyleBackColor = true;
+            this.btnAplicarFiltros.UseVisualStyleBackColor = false;
             this.btnAplicarFiltros.Click += new System.EventHandler(this.button4_Click);
             // 
             // FrmDashboard

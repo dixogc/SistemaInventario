@@ -236,7 +236,7 @@ namespace SistemaInventario.AccesoDatos
         }
 
         //UPDATE
-        public static Articulo ActualizarStock(int idArticulo, int stockAñadido)
+        public static Articulo ActualizarStock(int idArticulo, int cantidadCambio)
         {
             Articulo articulo = null;
 
@@ -244,17 +244,33 @@ namespace SistemaInventario.AccesoDatos
             {
                 conexion.Open();
 
-                string updateQuery = "UPDATE articulos SET stock = @s WHERE id = @id";
-                SqlCommand updateCmd = new SqlCommand(updateQuery, conexion);
-                updateCmd.Parameters.AddWithValue("@s", stockAñadido);
-                updateCmd.Parameters.AddWithValue("@id", idArticulo);
-                updateCmd.ExecuteNonQuery();
-
                 string selectQuery = "SELECT * FROM articulos WHERE id = @id";
                 SqlCommand selectCmd = new SqlCommand(selectQuery, conexion);
                 selectCmd.Parameters.AddWithValue("@id", idArticulo);
 
+                int stockActual = 0;
+
                 using (SqlDataReader reader = selectCmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        stockActual = reader.GetInt32(reader.GetOrdinal("stock")); 
+                    }
+                }
+
+                int nuevoStock = stockActual + cantidadCambio;
+                if (nuevoStock < 0) nuevoStock = 0; 
+
+                string updateQuery = "UPDATE articulos SET stock = @s WHERE id = @id";
+                SqlCommand updateCmd = new SqlCommand(updateQuery, conexion);
+                updateCmd.Parameters.AddWithValue("@s", nuevoStock);
+                updateCmd.Parameters.AddWithValue("@id", idArticulo);
+                updateCmd.ExecuteNonQuery();
+
+                SqlCommand finalSelectCmd = new SqlCommand(selectQuery, conexion);
+                finalSelectCmd.Parameters.AddWithValue("@id", idArticulo);
+
+                using (SqlDataReader reader = finalSelectCmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
@@ -263,30 +279,28 @@ namespace SistemaInventario.AccesoDatos
                             Id = reader.GetInt32(reader.GetOrdinal("id")),
                             Nombre = reader.GetString(reader.GetOrdinal("nombre")),
                             Descripcion = reader.GetString(reader.GetOrdinal("descripcion")),
-                            Stock = reader.GetInt32(reader.GetOrdinal("stock_actual")),
-                            Subcategoria = reader.GetInt32(reader.GetOrdinal("categoria_id")),
+                            Stock = reader.GetInt32(reader.GetOrdinal("stock")),
+                            Subcategoria = reader.GetInt32(reader.GetOrdinal("subcategoria_id")),
                             Ubicacion = reader.GetInt32(reader.GetOrdinal("ubicacion_id"))
                         };
                     }
                 }
             }
+
             return articulo;
         }
 
-        public static Articulo ActualizarArticulo(int idArticulo)
+        public static Articulo ActualizarArticulo(Articulo articulo)
         {
-            Articulo articulo = null;
-
             using (SqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
 
-                string query = "UPDATE articulos SET nombre = @n, descripcion = @d, stock = @s, subcategoria_id = @c, ubicacion_id = @u WHERE id = @id";
+                string query = "UPDATE articulos SET nombre = @n, descripcion = @d, subcategoria_id = @c, ubicacion_id = @u WHERE id = @id";
 
                 SqlCommand cmd = new SqlCommand(query, conexion);
                 cmd.Parameters.AddWithValue("@n", articulo.Nombre);
                 cmd.Parameters.AddWithValue("@d", articulo.Descripcion);
-                cmd.Parameters.AddWithValue("@s", articulo.Stock);
                 cmd.Parameters.AddWithValue("@c", articulo.Subcategoria);
                 cmd.Parameters.AddWithValue("@u", articulo.Ubicacion);
                 cmd.Parameters.AddWithValue("@id", articulo.Id);
@@ -294,7 +308,7 @@ namespace SistemaInventario.AccesoDatos
 
                 string selectQuery = "SELECT * FROM articulos WHERE id = @id";
                 SqlCommand selectCmd = new SqlCommand(selectQuery, conexion);
-                selectCmd.Parameters.AddWithValue("@id", idArticulo);
+                selectCmd.Parameters.AddWithValue("@id", articulo.Id);
 
                 using (SqlDataReader reader = selectCmd.ExecuteReader())
                 {
@@ -305,7 +319,6 @@ namespace SistemaInventario.AccesoDatos
                             Id = reader.GetInt32(reader.GetOrdinal("id")),
                             Nombre = reader.GetString(reader.GetOrdinal("nombre")),
                             Descripcion = reader.GetString(reader.GetOrdinal("descripcion")),
-                            Stock = reader.GetInt32(reader.GetOrdinal("stock_actual")),
                             Subcategoria = reader.GetInt32(reader.GetOrdinal("subcategoria_id")),
                             Ubicacion = reader.GetInt32(reader.GetOrdinal("ubicacion_id"))
                         };
