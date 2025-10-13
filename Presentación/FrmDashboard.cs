@@ -41,7 +41,7 @@ namespace SistemaInventario.Presentación
 
             string articuloBuscado = txtBuscar.Text;
 
-            List<Articulo> resultadosSinFiltro = ArticuloDA.ObtenerArticulosPorNombre(articuloBuscado);
+            List<Articulo> resultadosSinFiltro = ArticuloDA.BuscarArticulos(articuloBuscado, null, null);
 
             flowLayoutPanel1.Controls.Clear();
 
@@ -113,7 +113,7 @@ namespace SistemaInventario.Presentación
 
             if (cbCategorias.SelectedIndex != -1 && cbSubcategorias.SelectedIndex == -1)
             {
-                List<Articulo> resultadosConCategoria = ArticuloDA.ObtenerArticulosPorCategoria(articuloBuscado, idCategoria);
+                List<Articulo> resultadosConCategoria = ArticuloDA.BuscarArticulos(null, idCategoria, null);
 
                 flowLayoutPanel1.Controls.Clear();
 
@@ -126,7 +126,7 @@ namespace SistemaInventario.Presentación
             if (cbCategorias.SelectedIndex != -1 && cbSubcategorias.SelectedIndex != -1)
             {
                 int idSubcategoria = (int)cbSubcategorias.SelectedValue;
-                List<Articulo> resultadosConSubcategoria = ArticuloDA.ObtenerArticulosPorSubcategoria(articuloBuscado, idSubcategoria);
+                List<Articulo> resultadosConSubcategoria = ArticuloDA.BuscarArticulos(null, null, idSubcategoria);
 
                 flowLayoutPanel1.Controls.Clear();
 
@@ -148,7 +148,7 @@ namespace SistemaInventario.Presentación
 
                 string articuloBuscado = txtBuscar.Text;
 
-                List<Articulo> resultadosSinFiltro = ArticuloDA.ObtenerArticulosPorNombre(articuloBuscado);
+                List<Articulo> resultadosSinFiltro = ArticuloDA.BuscarArticulos(articuloBuscado, null, null);
 
                 flowLayoutPanel1.Controls.Clear();
 

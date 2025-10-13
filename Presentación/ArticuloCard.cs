@@ -23,14 +23,13 @@ namespace SistemaInventario.Presentación
             Subcategoria subcategoria = CategoriaDA.ObtenerSubcategoriaPorId(articulo.Subcategoria);
             string descripcionUbicacion = UbicacionDA.ObtenerDescripcionUbicacion(articulo.Ubicacion);
             Articulo = articulo;
-            lblNombre.Text = articulo.Nombre;
-            lblDescripcion.Text = articulo.Descripcion;
             stockOriginal = articulo.Stock;
             stockActual = stockOriginal;
             lblStock.Text = stockActual.ToString();
             lblConteo.Text = ""; 
             lblCategoria.Text = subcategoria.Nombre;
             lblUbicacion.Text = descripcionUbicacion;
+            lblNombre.Text = articulo.DescripcionCompleta.ToUpperInvariant();
         }
 
         private void UserControl1_Load(object sender, EventArgs e)

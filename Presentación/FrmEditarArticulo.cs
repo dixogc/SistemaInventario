@@ -1,4 +1,5 @@
 ﻿using SistemaInventario.AccesoDatos;
+using SistemaInventario.LogicaNegocio;
 using SistemaInventario.Modelos;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static SistemaInventario.AccesoDatos.ArticuloDA;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SistemaInventario.Presentación
@@ -26,33 +28,37 @@ namespace SistemaInventario.Presentación
         public FrmEditarArticulo(Articulo articulo)
         {
             InitializeComponent();
-
             articuloOriginal = articulo;
 
             cbCategoria.DataSource = CategoriaDA.ObtenerTodasLasSubCategorias();
             cbCategoria.DisplayMember = "Nombre";
             cbCategoria.ValueMember = "Id";
 
-            cbSeccion.DataSource = UbicacionDA.ObtenerSeccionesUbicacion();
+            cbSeccion.DataSource = UbicacionDA.ObtenerCatalogoUbicacion("Seccion");
             cbSeccion.DisplayMember = "Nombre";
             cbSeccion.ValueMember = "Id";
 
-            cbEstante.DataSource = UbicacionDA.ObtenerEstantesUbicacion();
+            cbEstante.DataSource = UbicacionDA.ObtenerCatalogoUbicacion("Estante");
             cbEstante.DisplayMember = "Nombre";
             cbEstante.ValueMember = "Id";
 
-            int ubicacionId = articulo.Ubicacion;
-            int seccion = UbicacionDA.ObtenerSeccionPorIdUbicacion(ubicacionId);
-            int estante = UbicacionDA.ObtenerEstantePorIdUbicacion(ubicacionId);
-            txtNombre.Text = articulo.Nombre;
-            txtDescripcion.Text = articulo.Descripcion;
-            cbCategoria.SelectedValue = articulo.Subcategoria;
-            cbSeccion.SelectedValue = seccion;
-            cbEstante.SelectedValue = estante;
+            Ubicacion ubicacion = UbicacionDA.BuscarUbicacion(articulo.Ubicacion);
+            if (ubicacion != null)
+            {
+                cbSeccion.SelectedValue = ubicacion.Seccion;
+                cbEstante.SelectedValue = ubicacion.Estante;
+            }
 
+            txtNombre.Text = articulo.Nombre;
+            txtMarca.Text = articulo.Marca;
+            txtModelo.Text = articulo.Modelo;
+            txtMedidas.Text = articulo.Medidas;
+            txtCapacidad.Text = articulo.Capacidad;
+            txtCaracteristicaE.Text = articulo.CaracteristicaExtra;
+            cbCategoria.SelectedValue = articulo.Subcategoria;
         }
 
-        
+
 
         private void label2_Click(object sender, EventArgs e)
         {
@@ -66,37 +72,54 @@ namespace SistemaInventario.Presentación
 
         private void btnActualizar_Click(object sender, EventArgs e)
         {
-            int idCategoria = (int)cbCategoria.SelectedValue;
+            int idSubcategoria = (int)cbCategoria.SelectedValue;
             int idSeccion = (int)cbSeccion.SelectedValue;
             int idEstante = (int)cbEstante.SelectedValue;
-            int idUbicacion = UbicacionDA.ObtenerUbicacionId(idSeccion, idEstante);
+
+            Ubicacion ubicacion = UbicacionDA.BuscarUbicacion(null, idSeccion, idEstante);
+            int idUbicacion = ubicacion?.Id ?? -1;
+
             if (idUbicacion == -1)
             {
                 idUbicacion = UbicacionDA.CrearUbicacion(idSeccion, idEstante, "");
             }
 
             bool siHayCambios =
-            txtNombre.Text != articuloOriginal.Nombre ||
-            txtDescripcion.Text != articuloOriginal.Descripcion ||
-            idCategoria != articuloOriginal.Subcategoria ||
-            idUbicacion != articuloOriginal.Ubicacion;
-
+                txtNombre.Text != articuloOriginal.Nombre ||
+                idSubcategoria != articuloOriginal.Subcategoria ||
+                idUbicacion != articuloOriginal.Ubicacion;
 
             if (siHayCambios)
             {
                 Articulo articuloEditado = new Articulo
                 {
-                    Id = articuloOriginal.Id, 
-                    Nombre = txtNombre.Text,
-                    Descripcion = txtDescripcion.Text,
-                    Subcategoria = idCategoria,
-                    Ubicacion = idUbicacion
+                    Id = articuloOriginal.Id,
+                    Nombre = txtNombre.Text.ToUpperInvariant(),
+                    Subcategoria = idSubcategoria,
+                    Ubicacion = idUbicacion,
+                    Marca = txtMarca.Text.ToUpperInvariant(),
+                    Modelo = txtModelo.Text.ToUpperInvariant(),
+                    Medidas = txtMedidas.Text.ToUpperInvariant(),
+                    Capacidad = txtCapacidad.Text.ToUpperInvariant(),
+                    CaracteristicaExtra = txtCaracteristicaE.Text.ToUpperInvariant()
                 };
 
-                ArticuloDA.ActualizarArticulo(articuloEditado);
-                MessageBox.Show("Artículo actualizado.");
+                TipoCoincidencia coincidencia = ArticuloDA.ValidarArticuloExistente(articuloEditado);
+
+                ArticuloValid service = new ArticuloValid();
+                bool resultado = service.EditarArticuloService(articuloEditado, coincidencia);
+
+                if (resultado)
+                {
+                    MessageBox.Show("Artículo editado con éxito");
+                    this.Close();
+                }
+
             }
-            else MessageBox.Show("Edita los campos del artículo para actualizar");
+            else
+            {
+                MessageBox.Show("Edita los campos del artículo para actualizar");
+            }
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)

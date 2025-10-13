@@ -1,12 +1,13 @@
-﻿using System;
+﻿using SistemaInventario.Modelos;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SistemaInventario.Modelos;
-using System.Data.SqlClient;
 using System.Windows.Forms;
-
+#nullable enable
 
 namespace SistemaInventario.AccesoDatos
 {
@@ -20,195 +21,123 @@ namespace SistemaInventario.AccesoDatos
             using (SqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
-                //try
-                //{
-                    string query = "INSERT INTO articulos (nombre, descripcion, stock, subcategoria_id, ubicacion_id) VALUES (@n, @d, @s, @su, @u)";
-                    SqlCommand cmd = new SqlCommand(query, conexion);
-                    cmd.Parameters.AddWithValue("@n", art.Nombre);
-                    cmd.Parameters.AddWithValue("@d", art.Descripcion);
-                    cmd.Parameters.AddWithValue("@s", art.Stock);
-                    cmd.Parameters.AddWithValue("@su", art.Subcategoria);
-                    cmd.Parameters.AddWithValue("@u", art.Ubicacion);
-                    cmd.ExecuteNonQuery();
-                    MessageBox.Show("Articulo guardado");
-                //}
-                //catch(Exception ex)
-                //{
-                //    MessageBox.Show("Error, articulo no guardado");
-                //}
-                
+                SqlCommand cmd = new SqlCommand("InsertarArticulo", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@Nombre", art.Nombre);
+                cmd.Parameters.AddWithValue("@Marca", (object?)art.Marca ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Modelo", (object?)art.Modelo ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Medidas", (object?)art.Medidas ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Capacidad", (object?)art.Capacidad ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@CaracteristicaExtra", (object?)art.CaracteristicaExtra ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Stock", art.Stock);
+                cmd.Parameters.AddWithValue("@SubcategoriaId", art.Subcategoria);
+                cmd.Parameters.AddWithValue("@UbicacionId", art.Ubicacion);
+
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Artículo guardado");
             }
-                
         }
 
         //READ
 
-        //Devolver los articulos existentes en caso de haber resultados
-        public static bool ComprobarExistenciaDeArticulo(string articuloBuscado)
+        public enum TipoCoincidencia
         {
-            bool articuloExiste = false;
-
-            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
-            {
-                conexion.Open();
-                string query = "SELECT * FROM articulos WHERE nombre LIKE @nombreArticulo";
-                SqlCommand cmd = new SqlCommand (query, conexion);
-                cmd.Parameters.AddWithValue("@nombreArticulo", articuloBuscado);
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        articuloExiste = true;
-                    }
-                }
-            }
-            return articuloExiste;
+            Ninguna,
+            Exacta,
+            Atributos
         }
 
-        public static Articulo ObtenerArticuloPorId(int id)
+        public static TipoCoincidencia ValidarArticuloExistente(Articulo art)
         {
-            Articulo articulos = null;
-            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
+            using SqlConnection conexion = ConexionBD.ObtenerConexion();
+            conexion.Open();
+            SqlCommand cmd = new SqlCommand("ValidarArticuloExistente", conexion)
             {
-                conexion.Open();
+                CommandType = CommandType.StoredProcedure
+            };
 
-                string query = "SELECT id, nombre, descripcion, stock_actual, subcategoria_id, ubicacion_id FROM articulos WHERE id = @id";
-                SqlCommand cmd = new SqlCommand(query, conexion);
-                cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@Id", art.Id);
+            cmd.Parameters.AddWithValue("@Nombre", art.Nombre);
+            cmd.Parameters.AddWithValue("@Marca", (object?)art.Marca ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Modelo", (object?)art.Modelo ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Medidas", (object?)art.Medidas ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Capacidad", (object?)art.Capacidad ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@CaracteristicaExtra", (object?)art.CaracteristicaExtra ?? DBNull.Value);
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        articulos = new Articulo
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("id")),
-                            Nombre = reader.GetString(reader.GetOrdinal("nombre")),
-                            Descripcion = reader.GetString(reader.GetOrdinal("descripcion")),
-                            Stock = reader.GetInt32(reader.GetOrdinal("stock")),
-                            Subcategoria = reader.GetInt32(reader.GetOrdinal("Subsubcategoria_id")),
-                            Ubicacion = reader.GetInt32(reader.GetOrdinal("ubicacion_id"))
-                        };
-                    }
-                    return articulos;
-                }
+            using SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                string tipo = reader.GetString(reader.GetOrdinal("TipoCoincidencia"));
+                return tipo == "Exacto" ? TipoCoincidencia.Exacta : TipoCoincidencia.Atributos;
             }
+
+            return TipoCoincidencia.Ninguna;
         }
 
         public static List<Articulo> ObtenerTodosLosArticulos()
         {
-            List<Articulo> articulos = new List<Articulo>();
+            List<Articulo> articulos = new();
             using (SqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
-                string query = "SELECT * FROM articulos";
-                SqlCommand cmd = new SqlCommand(query, conexion);
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                SqlCommand cmd = new("ObtenerTodosLosArticulos", conexion)
                 {
-                    while (reader.Read())
-                    {
-                        articulos.Add(new Articulo
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("id")),
-                            Nombre = reader.GetString(reader.GetOrdinal("nombre")),
-                            Descripcion = reader.GetString(reader.GetOrdinal("descripcion")),
-                            Stock = reader.GetInt32(reader.GetOrdinal("stock")),
-                            Subcategoria = reader.GetInt32(reader.GetOrdinal("subcategoria_id")),
-                            Ubicacion = reader.GetInt32(reader.GetOrdinal("ubicacion_id"))
-                        });
-                    }
-                }
-                return articulos;
-            }
-        }
-        
+                    CommandType = CommandType.StoredProcedure
+                };
 
-        public static List<Articulo> ObtenerArticulosPorNombre(string nombreArticulo)
-        {
-            List<Articulo> articulos = new List<Articulo>();
-            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
-            {
-                conexion.Open();
-                string query = "SELECT * FROM articulos WHERE nombre LIKE @nombreBuscado";
-                SqlCommand cmd = new SqlCommand(query, conexion);
-                cmd.Parameters.AddWithValue("nombreBuscado", "%" + nombreArticulo + "%");
-                
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    articulos.Add(new Articulo
                     {
-                        articulos.Add(new Articulo
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("id")),
-                            Nombre = reader.GetString(reader.GetOrdinal("nombre")),
-                            Descripcion = reader.GetString(reader.GetOrdinal("descripcion")),
-                            Stock = reader.GetInt32(reader.GetOrdinal("stock")),
-                            Subcategoria = reader.GetInt32(reader.GetOrdinal("subcategoria_id")),
-                            Ubicacion = reader.GetInt32(reader.GetOrdinal("ubicacion_id"))
-                        });
-                    }
-                }
-                return articulos;
-            }
-        }
-
-        public static List<Articulo> ObtenerArticulosPorCategoria(string nombreArticulo, int idCategoria)
-        {
-            List<Articulo> articulos = new List<Articulo>();
-            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
-            {
-                conexion.Open();
-                string query = "SELECT * FROM articulos WHERE nombre LIKE @nombreBuscado AND subcategoria_id IN (SELECT id FROM subcategoria WHERE categoria_id = @idCategoria)";
-                SqlCommand cmd = new SqlCommand(query, conexion);
-                cmd.Parameters.AddWithValue("nombreBuscado", "%" + nombreArticulo + "%");
-                cmd.Parameters.AddWithValue("@idCategoria", idCategoria);
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        articulos.Add(new Articulo
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("id")),
-                            Nombre = reader.GetString(reader.GetOrdinal("nombre")),
-                            Descripcion = reader.GetString(reader.GetOrdinal("descripcion")),
-                            Stock = reader.GetInt32(reader.GetOrdinal("stock")),
-                            Subcategoria = reader.GetInt32(reader.GetOrdinal("subcategoria_id")),
-                            Ubicacion = reader.GetInt32(reader.GetOrdinal("ubicacion_id"))
-                        });
-                    }
+                        Id = reader.GetInt32(reader.GetOrdinal("id")),
+                        Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
+                        Marca = reader["Marca"] as string,
+                        Modelo = reader["Modelo"] as string,
+                        Medidas = reader["Medidas"] as string,
+                        Capacidad = reader["Capacidad"] as string,
+                        CaracteristicaExtra = reader["Caracteristica_extra"] as string,
+                        Stock = reader.GetInt32(reader.GetOrdinal("Stock")),
+                        Subcategoria = reader.GetInt32(reader.GetOrdinal("Subcategoria_id")),
+                        Ubicacion = reader.GetInt32(reader.GetOrdinal("Ubicacion_id"))
+                    });
                 }
             }
             return articulos;
         }
 
-        public static List<Articulo> ObtenerArticulosPorSubcategoria(string nombreArticulo, int idSubcategoria)
+        public static List<Articulo> BuscarArticulos(string? nombre, int? idCategoria, int? idSubcategoria)
         {
-            List<Articulo> articulos = new List<Articulo>();
+            List<Articulo> articulos = new();
             using (SqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
-                string query = "SELECT * FROM articulos WHERE nombre LIKE @nombreBuscado AND subcategoria_id = @idSubcategoria";
-                SqlCommand cmd = new SqlCommand(query, conexion);
-                cmd.Parameters.AddWithValue("nombreBuscado", "%" + nombreArticulo + "%");
-                cmd.Parameters.AddWithValue("@idSubcategoria", idSubcategoria);
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                SqlCommand cmd = new SqlCommand("BuscarArticulos", conexion)
                 {
-                    while (reader.Read())
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.AddWithValue("@Nombre", (object?)nombre ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdCategoria", (object?)idCategoria ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdSubcategoria", (object?)idSubcategoria ?? DBNull.Value);
+
+                using SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    articulos.Add(new Articulo
                     {
-                        articulos.Add(new Articulo
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("id")),
-                            Nombre = reader.GetString(reader.GetOrdinal("nombre")),
-                            Descripcion = reader.GetString(reader.GetOrdinal("descripcion")),
-                            Stock = reader.GetInt32(reader.GetOrdinal("stock")),
-                            Subcategoria = reader.GetInt32(reader.GetOrdinal("subcategoria_id")),
-                            Ubicacion = reader.GetInt32(reader.GetOrdinal("ubicacion_id"))
-                        });
-                    }
+                        Id = reader.GetInt32(reader.GetOrdinal("id")),
+                        Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
+                        Marca = reader["Marca"] as string,
+                        Modelo = reader["Modelo"] as string,
+                        Medidas = reader["Medidas"] as string,
+                        Capacidad = reader["Capacidad"] as string,
+                        CaracteristicaExtra = reader["Caracteristica_extra"] as string,
+                        Stock = reader.GetInt32(reader.GetOrdinal("Stock")),
+                        Subcategoria = reader.GetInt32(reader.GetOrdinal("Subcategoria_id")),
+                        Ubicacion = reader.GetInt32(reader.GetOrdinal("Ubicacion_id"))
+                    });
                 }
             }
             return articulos;
@@ -216,116 +145,98 @@ namespace SistemaInventario.AccesoDatos
 
         public static int ObtenerStockActual(int idArticulo)
         {
-            int stock = 0;
             using (SqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
-                string query = "SELECT stock FROM articulos WHERE id = @idArticulo";
-                SqlCommand cmd = new SqlCommand( query, conexion);
-                cmd.Parameters.AddWithValue("@id", idArticulo);
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                SqlCommand cmd = new SqlCommand("ObtenerStockActual", conexion)
                 {
-                    if(reader.Read())
-                    {
-                        stock = reader.GetInt32(reader.GetOrdinal("stock"));
-                    }
+                    CommandType = CommandType.StoredProcedure
+                };
+                cmd.Parameters.AddWithValue("@ArticuloId", idArticulo);
+
+                using SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader.GetInt32(reader.GetOrdinal("Stock"));
                 }
-                return stock;
             }
+            return 0;
         }
 
         //UPDATE
         public static Articulo ActualizarStock(int idArticulo, int cantidadCambio)
         {
-            Articulo articulo = null;
-
             using (SqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
-
-                string selectQuery = "SELECT * FROM articulos WHERE id = @id";
-                SqlCommand selectCmd = new SqlCommand(selectQuery, conexion);
-                selectCmd.Parameters.AddWithValue("@id", idArticulo);
-
-                int stockActual = 0;
-
-                using (SqlDataReader reader = selectCmd.ExecuteReader())
+                SqlCommand cmd = new SqlCommand("ActualizarStock", conexion)
                 {
-                    if (reader.Read())
-                    {
-                        stockActual = reader.GetInt32(reader.GetOrdinal("stock")); 
-                    }
-                }
+                    CommandType = CommandType.StoredProcedure
+                };
 
-                int nuevoStock = stockActual + cantidadCambio;
-                if (nuevoStock < 0) nuevoStock = 0; 
+                cmd.Parameters.AddWithValue("@ArticuloId", idArticulo);
+                cmd.Parameters.AddWithValue("@CantidadCambio", cantidadCambio);
 
-                string updateQuery = "UPDATE articulos SET stock = @s WHERE id = @id";
-                SqlCommand updateCmd = new SqlCommand(updateQuery, conexion);
-                updateCmd.Parameters.AddWithValue("@s", nuevoStock);
-                updateCmd.Parameters.AddWithValue("@id", idArticulo);
-                updateCmd.ExecuteNonQuery();
-
-                SqlCommand finalSelectCmd = new SqlCommand(selectQuery, conexion);
-                finalSelectCmd.Parameters.AddWithValue("@id", idArticulo);
-
-                using (SqlDataReader reader = finalSelectCmd.ExecuteReader())
+                using SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
                 {
-                    if (reader.Read())
+                    return new Articulo
                     {
-                        articulo = new Articulo
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("id")),
-                            Nombre = reader.GetString(reader.GetOrdinal("nombre")),
-                            Descripcion = reader.GetString(reader.GetOrdinal("descripcion")),
-                            Stock = reader.GetInt32(reader.GetOrdinal("stock")),
-                            Subcategoria = reader.GetInt32(reader.GetOrdinal("subcategoria_id")),
-                            Ubicacion = reader.GetInt32(reader.GetOrdinal("ubicacion_id"))
-                        };
-                    }
+                        Id = reader.GetInt32(reader.GetOrdinal("id")),
+                        Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
+                        Marca = reader["Marca"] as string,
+                        Modelo = reader["Modelo"] as string,
+                        Medidas = reader["Medidas"] as string,
+                        Capacidad = reader["Capacidad"] as string,
+                        CaracteristicaExtra = reader["Caracteristica_extra"] as string,
+                        Stock = reader.GetInt32(reader.GetOrdinal("Stock")),
+                        Subcategoria = reader.GetInt32(reader.GetOrdinal("Subcategoria_id")),
+                        Ubicacion = reader.GetInt32(reader.GetOrdinal("Ubicacion_id"))
+                    };
                 }
             }
-
-            return articulo;
+            return null;
         }
 
-        public static Articulo ActualizarArticulo(Articulo articulo)
+        public static Articulo ActualizarArticulo(Articulo art)
         {
             using (SqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
-
-                string query = "UPDATE articulos SET nombre = @n, descripcion = @d, subcategoria_id = @c, ubicacion_id = @u WHERE id = @id";
-
-                SqlCommand cmd = new SqlCommand(query, conexion);
-                cmd.Parameters.AddWithValue("@n", articulo.Nombre);
-                cmd.Parameters.AddWithValue("@d", articulo.Descripcion);
-                cmd.Parameters.AddWithValue("@c", articulo.Subcategoria);
-                cmd.Parameters.AddWithValue("@u", articulo.Ubicacion);
-                cmd.Parameters.AddWithValue("@id", articulo.Id);
-                cmd.ExecuteNonQuery();
-
-                string selectQuery = "SELECT * FROM articulos WHERE id = @id";
-                SqlCommand selectCmd = new SqlCommand(selectQuery, conexion);
-                selectCmd.Parameters.AddWithValue("@id", articulo.Id);
-
-                using (SqlDataReader reader = selectCmd.ExecuteReader())
+                SqlCommand cmd = new SqlCommand("ActualizarArticulo", conexion)
                 {
-                    if (reader.Read())
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.AddWithValue("@Id", art.Id);
+                cmd.Parameters.AddWithValue("@Nombre", art.Nombre);
+                cmd.Parameters.AddWithValue("@Marca", (object?)art.Marca ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Modelo", (object?)art.Modelo ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Medidas", (object?)art.Medidas ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Capacidad", (object?)art.Capacidad ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@CaracteristicaExtra", (object?)art.CaracteristicaExtra ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@SubcategoriaId", art.Subcategoria);
+                cmd.Parameters.AddWithValue("@UbicacionId", art.Ubicacion);
+
+                using SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return new Articulo
                     {
-                        articulo = new Articulo
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("id")),
-                            Nombre = reader.GetString(reader.GetOrdinal("nombre")),
-                            Descripcion = reader.GetString(reader.GetOrdinal("descripcion")),
-                            Subcategoria = reader.GetInt32(reader.GetOrdinal("subcategoria_id")),
-                            Ubicacion = reader.GetInt32(reader.GetOrdinal("ubicacion_id"))
-                        };
-                    }
+                        Id = reader.GetInt32(reader.GetOrdinal("id")),
+                        Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
+                        Marca = reader["Marca"] as string,
+                        Modelo = reader["Modelo"] as string,
+                        Medidas = reader["Medidas"] as string,
+                        Capacidad = reader["Capacidad"] as string,
+                        CaracteristicaExtra = reader["Caracteristica_extra"] as string,
+                        Stock = reader.GetInt32(reader.GetOrdinal("Stock")),
+                        Subcategoria = reader.GetInt32(reader.GetOrdinal("Subcategoria_id")),
+                        Ubicacion = reader.GetInt32(reader.GetOrdinal("Ubicacion_id"))
+                    };
                 }
-                return articulo;
             }
+            return null;
         }
 
     }

@@ -1,6 +1,7 @@
 ﻿using SistemaInventario.Modelos;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -12,101 +13,93 @@ namespace SistemaInventario.AccesoDatos
     {
         public static Subcategoria ObtenerSubcategoriaPorId(int idSubcategoria)
         {
-            Subcategoria subcategoria = new Subcategoria();
-            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
+            using SqlConnection conexion = ConexionBD.ObtenerConexion();
+            conexion.Open();
+            SqlCommand cmd = new SqlCommand("ObtenerSubcategoriaPorId", conexion)
             {
-                conexion.Open();
-                string query = "SELECT id, nombre, categoria_id FROM subcategoria WHERE id = @id";
-                SqlCommand cmd = new SqlCommand(query, conexion);
-                cmd.Parameters.AddWithValue("@id", idSubcategoria);
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("@Id", idSubcategoria);
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
+            using SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                return new Subcategoria
                 {
-                    if (reader.Read())
-                    {
-                        subcategoria = new Subcategoria
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("id")),
-                            Nombre = reader.GetString(reader.GetOrdinal("nombre")),
-                            Categoria = reader.GetInt32(reader.GetOrdinal("categoria_id"))
-                        };
-                    }
-                }
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
+                    Categoria = reader.GetInt32(reader.GetOrdinal("Categoria_Id"))
+                };
             }
-            return subcategoria;
+            return null;
         }
         public static List<Subcategoria> ObtenerSubcategoriasPorIdCategoria(int idCategoria)
         {
-            List<Subcategoria> subcategorias = new List<Subcategoria>();
-            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
+            List<Subcategoria> subcategorias = new();
+            using SqlConnection conexion = ConexionBD.ObtenerConexion();
+            conexion.Open();
+            SqlCommand cmd = new SqlCommand("ObtenerSubcategoriasPorIdCategoria", conexion)
             {
-                conexion.Open();
-                string query = "SELECT id, nombre, categoria_id FROM subcategoria WHERE categoria_id = @id";
-                SqlCommand cmd = new SqlCommand(query, conexion);
-                cmd.Parameters.AddWithValue("@id", idCategoria);
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("@IdCategoria", idCategoria);
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
+            using SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                subcategorias.Add(new Subcategoria
                 {
-                    while (reader.Read())
-                    {
-                        subcategorias.Add(new Subcategoria
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("id")),
-                            Nombre = reader.GetString(reader.GetOrdinal("nombre")),
-                            Categoria = reader.GetInt32(reader.GetOrdinal("categoria_id"))
-                        });
-                    }
-                }
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
+                    Categoria = reader.GetInt32(reader.GetOrdinal("Categoria_Id"))
+                });
             }
             return subcategorias;
         }
 
         public static List<Categoria> ObtenerTodasLasCategorias()
         {
-            List<Categoria> categorias = new List<Categoria>();
-            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
+            List<Categoria> categorias = new();
+            using SqlConnection conexion = ConexionBD.ObtenerConexion();
+            conexion.Open();
+            SqlCommand cmd = new SqlCommand("ObtenerTodasLasCategorias", conexion)
             {
-                conexion.Open();
-                string query = "SELECT id, nombre FROM categoria";
-                SqlCommand cmd = new SqlCommand(query, conexion);
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                CommandType = CommandType.StoredProcedure
+            };
+
+            using SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                categorias.Add(new Categoria
                 {
-                    while (reader.Read())
-                    {
-                        categorias.Add(new Categoria
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("id")),
-                            Nombre = reader.GetString(reader.GetOrdinal("nombre"))
-                        });
-                    }
-                }
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    Nombre = reader.GetString(reader.GetOrdinal("Nombre"))
+                });
             }
             return categorias;
         }
 
         public static List<Subcategoria> ObtenerTodasLasSubCategorias()
         {
-            List<Subcategoria> subcategorias = new List<Subcategoria>();
-            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
+            List<Subcategoria> subcategorias = new();
+            using SqlConnection conexion = ConexionBD.ObtenerConexion();
+            conexion.Open();
+            SqlCommand cmd = new SqlCommand("ObtenerTodasLasSubcategorias", conexion)
             {
-                conexion.Open();
-                string query = "SELECT id, nombre, categoria_id FROM subcategoria";
-                SqlCommand cmd = new SqlCommand(query, conexion);
+                CommandType = CommandType.StoredProcedure
+            };
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
+            using SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                subcategorias.Add(new Subcategoria
                 {
-                    while (reader.Read())
-                    {
-                        subcategorias.Add(new Subcategoria
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("id")),
-                            Nombre = reader.GetString(reader.GetOrdinal("nombre")),
-                            Categoria = reader.GetInt32(reader.GetOrdinal("categoria_id"))
-                        });
-                    }
-                }
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
+                    Categoria = reader.GetInt32(reader.GetOrdinal("Categoria_Id"))
+                });
             }
             return subcategorias;
-        } 
+        }
     }
 }

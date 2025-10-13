@@ -6,47 +6,99 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static SistemaInventario.AccesoDatos.ArticuloDA;
 
 namespace SistemaInventario.LogicaNegocio
 {
     internal class ArticuloValid
     {
-        public void RegistrarArticuloService(Articulo art, bool articuloExiste)
+        public bool RegistrarArticuloService(Articulo articulo, TipoCoincidencia coincidencia)
         {
-            if (string.IsNullOrWhiteSpace(art.Nombre))
+            if (string.IsNullOrWhiteSpace(articulo.Nombre))
+            {
                 MessageBox.Show("El nombre es obligatorio");
-            if (string.IsNullOrWhiteSpace(art.Descripcion))
-                MessageBox.Show("La descripcion es obligatoria");
-            if (art.Stock < 0)
-                MessageBox.Show("El stock debe ser mayor que cero");
-            if (articuloExiste == true)
-            {
-                MessageBox.Show("El articulo ya existe");
-
+                return false;
             }
-            else ArticuloDA.InsertarArticulo(art);
+            if (articulo.Stock <= 0)
+            {
+                MessageBox.Show("La cantidad no debe ser negativa o cero");
+                return false;
+            }
+
+            if (articulo.Subcategoria == 0)
+            {
+                MessageBox.Show("Debe seleccionar una categoría");
+                return false;
+            }
+
+            if (articulo.Ubicacion == 0)
+            {
+                MessageBox.Show("Debe seleccionar una ubicación");
+                return false;
+            }
+
+            if (coincidencia == TipoCoincidencia.Exacta)
+            {
+                MessageBox.Show("Ya existe un artículo con este nombre y características.");
+                return false;
+            }
+
+            if (coincidencia == TipoCoincidencia.Atributos)
+            {
+                DialogResult result = MessageBox.Show(
+                    "Ya existe un artículo con estas características pero con otro nombre. ¿Deseas continuar?",
+                    "Advertencia de duplicado parcial",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+
+                if (result == DialogResult.No)
+                    return false;
+            }
+
+            ArticuloDA.InsertarArticulo(articulo);
+            return true;
         }
 
-        public void ObtenerArticuloService(int idArticulo)
+        public bool EditarArticuloService(Articulo articulo, TipoCoincidencia coincidencia)
         {
-            if (idArticulo != 0)
+            if (string.IsNullOrWhiteSpace(articulo.Nombre))
             {
-                ArticuloDA.ObtenerArticuloPorId(idArticulo);
+                MessageBox.Show("El nombre es obligatorio");
+                return false;
             }
-        }
 
-        public void ObtenerListaArticulosService(string nombreArticulos)
-        {
-            if (string.IsNullOrWhiteSpace(nombreArticulos))
+            if (articulo.Subcategoria == 0)
             {
-                throw new Exception("La barra de búsqueda no puede estar vacía");
+                MessageBox.Show("Debe seleccionar una categoría");
+                return false;
             }
-            ArticuloDA.ObtenerArticulosPorNombre(nombreArticulos);
-        }
 
-        public void ActualizarStockService(Articulo articulo)
-        {
-            int stockActualizado = ArticuloDA.ObtenerStockActual(articulo.Id) + articulo.Stock;
+            if (articulo.Ubicacion == 0)
+            {
+                MessageBox.Show("Debe seleccionar una ubicación");
+                return false;
+            }
+
+            if (coincidencia == TipoCoincidencia.Exacta)
+            {
+                MessageBox.Show("Ya existe un artículo con este nombre y características.");
+                return false;
+            }
+
+            if (coincidencia == TipoCoincidencia.Atributos)
+            {
+                DialogResult result = MessageBox.Show(
+                    "Ya existe un artículo con estas características pero con otro nombre. ¿Deseas continuar?",
+                    "Advertencia de duplicado parcial",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+
+                if (result == DialogResult.No)
+                    return false;
+            }
+
+            ArticuloDA.ActualizarArticulo(articulo);
+            return true;
         }
     }
 }

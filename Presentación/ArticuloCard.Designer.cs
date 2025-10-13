@@ -30,7 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ArticuloCard));
             this.lblNombre = new System.Windows.Forms.Label();
-            this.lblDescripcion = new System.Windows.Forms.Label();
             this.lblStock = new System.Windows.Forms.Label();
             this.lblUbicacion = new System.Windows.Forms.Label();
             this.lblCategoria = new System.Windows.Forms.Label();
@@ -54,23 +53,13 @@
             this.lblNombre.TabIndex = 1;
             this.lblNombre.Text = "Nombre del artículo";
             // 
-            // lblDescripcion
-            // 
-            this.lblDescripcion.AutoSize = true;
-            this.lblDescripcion.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDescripcion.Location = new System.Drawing.Point(117, 38);
-            this.lblDescripcion.Name = "lblDescripcion";
-            this.lblDescripcion.Size = new System.Drawing.Size(163, 15);
-            this.lblDescripcion.TabIndex = 2;
-            this.lblDescripcion.Text = "Descripcion del artículo";
-            // 
             // lblStock
             // 
             this.lblStock.AutoSize = true;
             this.lblStock.BackColor = System.Drawing.SystemColors.Control;
             this.lblStock.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.lblStock.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStock.Location = new System.Drawing.Point(168, 106);
+            this.lblStock.Location = new System.Drawing.Point(169, 90);
             this.lblStock.Name = "lblStock";
             this.lblStock.Size = new System.Drawing.Size(20, 22);
             this.lblStock.TabIndex = 3;
@@ -81,7 +70,7 @@
             // 
             this.lblUbicacion.AutoSize = true;
             this.lblUbicacion.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUbicacion.Location = new System.Drawing.Point(116, 59);
+            this.lblUbicacion.Location = new System.Drawing.Point(118, 40);
             this.lblUbicacion.Name = "lblUbicacion";
             this.lblUbicacion.Size = new System.Drawing.Size(73, 15);
             this.lblUbicacion.TabIndex = 4;
@@ -91,7 +80,7 @@
             // 
             this.lblCategoria.AutoSize = true;
             this.lblCategoria.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCategoria.Location = new System.Drawing.Point(117, 79);
+            this.lblCategoria.Location = new System.Drawing.Point(119, 60);
             this.lblCategoria.Name = "lblCategoria";
             this.lblCategoria.Size = new System.Drawing.Size(72, 15);
             this.lblCategoria.TabIndex = 5;
@@ -103,7 +92,7 @@
             this.btnAñadirArticulo.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnAñadirArticulo.BackgroundImage")));
             this.btnAñadirArticulo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnAñadirArticulo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAñadirArticulo.Location = new System.Drawing.Point(120, 106);
+            this.btnAñadirArticulo.Location = new System.Drawing.Point(121, 90);
             this.btnAñadirArticulo.Name = "btnAñadirArticulo";
             this.btnAñadirArticulo.Size = new System.Drawing.Size(32, 23);
             this.btnAñadirArticulo.TabIndex = 6;
@@ -115,7 +104,7 @@
             this.btnDisminuirArticulo.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnDisminuirArticulo.BackgroundImage")));
             this.btnDisminuirArticulo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnDisminuirArticulo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDisminuirArticulo.Location = new System.Drawing.Point(206, 106);
+            this.btnDisminuirArticulo.Location = new System.Drawing.Point(207, 90);
             this.btnDisminuirArticulo.Name = "btnDisminuirArticulo";
             this.btnDisminuirArticulo.Size = new System.Drawing.Size(31, 23);
             this.btnDisminuirArticulo.TabIndex = 7;
@@ -150,7 +139,7 @@
             this.btnActualizarStock.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnActualizarStock.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnActualizarStock.ForeColor = System.Drawing.SystemColors.Control;
-            this.btnActualizarStock.Location = new System.Drawing.Point(206, 149);
+            this.btnActualizarStock.Location = new System.Drawing.Point(207, 133);
             this.btnActualizarStock.Name = "btnActualizarStock";
             this.btnActualizarStock.Size = new System.Drawing.Size(123, 23);
             this.btnActualizarStock.TabIndex = 11;
@@ -162,7 +151,7 @@
             // 
             this.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancelar.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancelar.Location = new System.Drawing.Point(121, 149);
+            this.btnCancelar.Location = new System.Drawing.Point(122, 133);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(79, 23);
             this.btnCancelar.TabIndex = 12;
@@ -174,7 +163,7 @@
             // 
             this.lblConteo.AutoSize = true;
             this.lblConteo.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblConteo.Location = new System.Drawing.Point(117, 132);
+            this.lblConteo.Location = new System.Drawing.Point(118, 116);
             this.lblConteo.Name = "lblConteo";
             this.lblConteo.Size = new System.Drawing.Size(54, 15);
             this.lblConteo.TabIndex = 13;
@@ -185,8 +174,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.Controls.Add(this.lblConteo);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnActualizarStock);
@@ -197,10 +187,9 @@
             this.Controls.Add(this.lblCategoria);
             this.Controls.Add(this.lblUbicacion);
             this.Controls.Add(this.lblStock);
-            this.Controls.Add(this.lblDescripcion);
             this.Controls.Add(this.lblNombre);
             this.Name = "ArticuloCard";
-            this.Size = new System.Drawing.Size(449, 180);
+            this.Size = new System.Drawing.Size(449, 165);
             this.Load += new System.EventHandler(this.UserControl1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxArticulo)).EndInit();
             this.ResumeLayout(false);
@@ -210,7 +199,6 @@
 
         #endregion
         private System.Windows.Forms.Label lblNombre;
-        private System.Windows.Forms.Label lblDescripcion;
         private System.Windows.Forms.Label lblStock;
         private System.Windows.Forms.Label lblUbicacion;
         private System.Windows.Forms.Label lblCategoria;

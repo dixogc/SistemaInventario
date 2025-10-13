@@ -1,10 +1,11 @@
-﻿using System;
+﻿using SistemaInventario.Modelos;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SistemaInventario.Modelos;
 
 namespace SistemaInventario.AccesoDatos
 {
@@ -12,18 +13,17 @@ namespace SistemaInventario.AccesoDatos
     {
         public static int CrearUbicacion(int idSeccion, int idEstante, string descripcion)
         {
-            int idGenerado = -1;
-            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
+            using SqlConnection conexion = ConexionBD.ObtenerConexion();
+            conexion.Open();
+            SqlCommand cmd = new SqlCommand("CrearUbicacion", conexion)
             {
-                conexion.Open();
-                string query = "INSERT INTO ubicacion (seccion_id, estante_id, descripcion) OUTPUT INSERTED.id VALUES (@s, @e, @d)";
-                SqlCommand cmd = new SqlCommand(query, conexion);
-                cmd.Parameters.AddWithValue("@s", idSeccion);
-                cmd.Parameters.AddWithValue("@e", idEstante);
-                cmd.Parameters.AddWithValue("d", descripcion ?? string.Empty);
-                idGenerado = (int) cmd.ExecuteScalar();
-            }
-            return idGenerado;
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("@SeccionId", idSeccion);
+            cmd.Parameters.AddWithValue("@EstanteId", idEstante);
+            cmd.Parameters.AddWithValue("@Descripcion", descripcion ?? string.Empty);
+
+            return (int)cmd.ExecuteScalar();
         }
 
         public static string ObtenerDescripcionUbicacion(int ubicacionId)
@@ -57,126 +57,60 @@ namespace SistemaInventario.AccesoDatos
             return "Ubicación desconocida";
         }
 
-        public static int ObtenerUbicacionId(int idSeccion, int idEstante)
+        public static Ubicacion BuscarUbicacion(int? id = null, int? seccionId = null, int? estanteId = null)
         {
-            Ubicacion ubicacion = null;
-            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
+            using SqlConnection conexion = ConexionBD.ObtenerConexion();
+            conexion.Open();
+            SqlCommand cmd = new SqlCommand("BuscarUbicacion", conexion)
             {
-                conexion.Open();
-                string query = "SELECT id, seccion_id, estante_id, descripcion FROM ubicacion WHERE seccion_id = @s AND estante_id = @e";
-                SqlCommand cmd = new SqlCommand(query, conexion);
-                cmd.Parameters.AddWithValue("@s", idSeccion);
-                cmd.Parameters.AddWithValue("@e", idEstante);
+                CommandType = CommandType.StoredProcedure
+            };
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        ubicacion = new Ubicacion
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            Seccion = reader.GetInt32(reader.GetOrdinal("seccion_id")),
-                            Estante = reader.GetInt32(reader.GetOrdinal("estante_id")),
-                            Descripcion = reader.GetString(reader.GetOrdinal("descripcion"))
-                        };
-                    }
-                }
-            }
-            if (ubicacion != null)
+            cmd.Parameters.AddWithValue("@Id", (object?)id ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@SeccionId", (object?)seccionId ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@EstanteId", (object?)estanteId ?? DBNull.Value);
+
+            using SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
             {
-                return ubicacion.Id;
+                return new Ubicacion
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    Seccion = reader.GetInt32(reader.GetOrdinal("Seccion_Id")),
+                    Estante = reader.GetInt32(reader.GetOrdinal("Estante_Id")),
+                    Descripcion = reader["Descripcion"] as string
+                };
             }
-            else return -1;
+            return null;
         }
 
-        public static int ObtenerSeccionPorIdUbicacion(int idUbicacion)
+        public static List<CatalogoSimple> ObtenerCatalogoUbicacion(string tipo)
         {
-            int idSeccion = 0;
-            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
+            List<CatalogoSimple> resultado = new();
+            using SqlConnection conexion = ConexionBD.ObtenerConexion();
+            conexion.Open();
+            SqlCommand cmd = new SqlCommand("ObtenerCatalogoUbicacion", conexion)
             {
-                conexion.Open();
-                string query = "SELECT seccion_id FROM ubicacion WHERE id = @idUbicacion";
-                SqlCommand cmd = new SqlCommand(query, conexion);
-                cmd.Parameters.AddWithValue("idUbicacion", idUbicacion);
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("@Tipo", tipo);
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
+            using SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                resultado.Add(new CatalogoSimple
                 {
-                    if (reader.Read())
-                    {
-                        idSeccion = reader.GetInt32(reader.GetOrdinal("seccion_id"));
-                    }
-                }
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    Nombre = reader.GetString(reader.GetOrdinal("Nombre"))
+                });
             }
-            return idSeccion;
+            return resultado;
         }
 
-        public static List<Seccion> ObtenerSeccionesUbicacion()
+        public class CatalogoSimple
         {
-            List<Seccion> secciones = new List<Seccion>();
-            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
-            {
-                conexion.Open();
-                string query = "SELECT id, nombre FROM secciones";
-                SqlCommand cmd = new SqlCommand (query, conexion);
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        secciones.Add(new Seccion
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            Nombre = reader.GetString(reader.GetOrdinal("nombre"))
-                        });
-                    }
-                }
-            }
-            return secciones;
-        }
-
-        public static int ObtenerEstantePorIdUbicacion(int idUbicacion)
-        {
-            int idEstante = 0;
-            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
-            {
-                conexion.Open();
-                string query = "SELECT estante_id FROM ubicacion WHERE id = @idUbicacion";
-                SqlCommand cmd = new SqlCommand(query, conexion);
-                cmd.Parameters.AddWithValue("idUbicacion", idUbicacion);
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        idEstante = reader.GetInt32(reader.GetOrdinal("estante_id"));
-                    }
-                }
-            }
-            return idEstante;
-        }
-
-        public static List<Estante> ObtenerEstantesUbicacion()
-        {
-            List<Estante> estantes = new List<Estante>();
-            using (SqlConnection conexion = ConexionBD.ObtenerConexion())
-            {
-                conexion.Open();
-                string query = "SELECT id, nombre FROM estantes";
-                SqlCommand cmd = new SqlCommand (query, conexion);
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        estantes.Add(new Estante
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            Nombre = reader.GetString(reader.GetOrdinal("nombre"))
-                        });
-                    }
-                }
-
-            }
-            return estantes;
+            public int Id { get; set; }
+            public string Nombre { get; set; }
         }
     }
 }
