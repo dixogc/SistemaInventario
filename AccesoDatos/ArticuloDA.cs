@@ -33,9 +33,10 @@ namespace SistemaInventario.AccesoDatos
                 cmd.Parameters.AddWithValue("@Stock", art.Stock);
                 cmd.Parameters.AddWithValue("@SubcategoriaId", art.Subcategoria);
                 cmd.Parameters.AddWithValue("@UbicacionId", art.Ubicacion);
+                cmd.Parameters.AddWithValue("@StockMinimo", (object)art.StockMinimo ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("Tipo", (object?)art.Tipo ?? DBNull.Value);
 
                 cmd.ExecuteNonQuery();
-                MessageBox.Show("Artículo guardado");
             }
         }
 
@@ -64,6 +65,7 @@ namespace SistemaInventario.AccesoDatos
             cmd.Parameters.AddWithValue("@Medidas", (object?)art.Medidas ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@Capacidad", (object?)art.Capacidad ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@CaracteristicaExtra", (object?)art.CaracteristicaExtra ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("Tipo", (object?)art.Tipo ?? DBNull.Value);
 
             using SqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
@@ -73,6 +75,42 @@ namespace SistemaInventario.AccesoDatos
             }
 
             return TipoCoincidencia.Ninguna;
+        }
+
+        public static Articulo ObtenerArticuloPorId(int id)
+        {
+            using SqlConnection conexion = ConexionBD.ObtenerConexion();
+            {
+                conexion.Open();
+                using (SqlCommand cmd = new SqlCommand("ObtenerArticuloPorId", conexion))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@IdArticulo", id);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Articulo
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("id")),
+                                Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
+                                Stock = reader.GetInt32(reader.GetOrdinal("Stock")),
+                                Subcategoria = reader.GetInt32(reader.GetOrdinal("Subcategoria_id")),
+                                Ubicacion = reader.GetInt32(reader.GetOrdinal("Ubicacion_id")),
+                                Marca = reader["Marca"] as string,
+                                Modelo = reader["Modelo"] as string,
+                                Medidas = reader["Medidas"] as string,
+                                Capacidad = reader["Capacidad"] as string,
+                                CaracteristicaExtra = reader["Caracteristica_extra"] as string,
+                                StockMinimo = reader.GetInt32(reader.GetOrdinal("stock_minimo")),
+                                Tipo = reader["Tipo"] as string
+                            };
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
         public static List<Articulo> ObtenerTodosLosArticulos()
@@ -93,14 +131,16 @@ namespace SistemaInventario.AccesoDatos
                     {
                         Id = reader.GetInt32(reader.GetOrdinal("id")),
                         Nombre = reader.GetString(reader.GetOrdinal("Nombre")),
+                        Stock = reader.GetInt32(reader.GetOrdinal("Stock")),
+                        Subcategoria = reader.GetInt32(reader.GetOrdinal("Subcategoria_id")),
+                        Ubicacion = reader.GetInt32(reader.GetOrdinal("Ubicacion_id")),
                         Marca = reader["Marca"] as string,
                         Modelo = reader["Modelo"] as string,
                         Medidas = reader["Medidas"] as string,
                         Capacidad = reader["Capacidad"] as string,
                         CaracteristicaExtra = reader["Caracteristica_extra"] as string,
-                        Stock = reader.GetInt32(reader.GetOrdinal("Stock")),
-                        Subcategoria = reader.GetInt32(reader.GetOrdinal("Subcategoria_id")),
-                        Ubicacion = reader.GetInt32(reader.GetOrdinal("Ubicacion_id"))
+                        StockMinimo = reader.GetInt32(reader.GetOrdinal("stock_minimo")),
+                        Tipo = reader["Tipo"] as string
                     });
                 }
             }
@@ -136,7 +176,8 @@ namespace SistemaInventario.AccesoDatos
                         CaracteristicaExtra = reader["Caracteristica_extra"] as string,
                         Stock = reader.GetInt32(reader.GetOrdinal("Stock")),
                         Subcategoria = reader.GetInt32(reader.GetOrdinal("Subcategoria_id")),
-                        Ubicacion = reader.GetInt32(reader.GetOrdinal("Ubicacion_id"))
+                        Ubicacion = reader.GetInt32(reader.GetOrdinal("Ubicacion_id")),
+                        Tipo = reader["Tipo"] as string
                     });
                 }
             }
@@ -191,7 +232,9 @@ namespace SistemaInventario.AccesoDatos
                         CaracteristicaExtra = reader["Caracteristica_extra"] as string,
                         Stock = reader.GetInt32(reader.GetOrdinal("Stock")),
                         Subcategoria = reader.GetInt32(reader.GetOrdinal("Subcategoria_id")),
-                        Ubicacion = reader.GetInt32(reader.GetOrdinal("Ubicacion_id"))
+                        Ubicacion = reader.GetInt32(reader.GetOrdinal("Ubicacion_id")),
+                        StockMinimo = reader.GetInt32(reader.GetOrdinal("stock_minimo")),
+                        Tipo = reader["Tipo"] as string
                     };
                 }
             }
@@ -232,7 +275,8 @@ namespace SistemaInventario.AccesoDatos
                         CaracteristicaExtra = reader["Caracteristica_extra"] as string,
                         Stock = reader.GetInt32(reader.GetOrdinal("Stock")),
                         Subcategoria = reader.GetInt32(reader.GetOrdinal("Subcategoria_id")),
-                        Ubicacion = reader.GetInt32(reader.GetOrdinal("Ubicacion_id"))
+                        Ubicacion = reader.GetInt32(reader.GetOrdinal("Ubicacion_id")),
+                        Tipo = reader["Tipo"] as string
                     };
                 }
             }

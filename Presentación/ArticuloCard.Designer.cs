@@ -174,7 +174,6 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.Controls.Add(this.lblConteo);
@@ -189,7 +188,7 @@
             this.Controls.Add(this.lblStock);
             this.Controls.Add(this.lblNombre);
             this.Name = "ArticuloCard";
-            this.Size = new System.Drawing.Size(449, 165);
+            this.Size = new System.Drawing.Size(458, 165);
             this.Load += new System.EventHandler(this.UserControl1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxArticulo)).EndInit();
             this.ResumeLayout(false);

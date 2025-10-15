@@ -34,7 +34,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.txtNombre = new System.Windows.Forms.TextBox();
-            this.txtCantidad = new System.Windows.Forms.TextBox();
             this.cbSubcategoria = new System.Windows.Forms.ComboBox();
             this.cbSeccion = new System.Windows.Forms.ComboBox();
             this.cbEstante = new System.Windows.Forms.ComboBox();
@@ -49,6 +48,13 @@
             this.txtMedidas = new System.Windows.Forms.TextBox();
             this.txtCaracteristicaE = new System.Windows.Forms.TextBox();
             this.txtCapacidad = new System.Windows.Forms.TextBox();
+            this.numCantidadStock = new System.Windows.Forms.NumericUpDown();
+            this.lblCantMinStock = new System.Windows.Forms.Label();
+            this.numCantMinStock = new System.Windows.Forms.NumericUpDown();
+            this.lblTipo = new System.Windows.Forms.Label();
+            this.txtTipo = new System.Windows.Forms.TextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.numCantidadStock)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numCantMinStock)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -56,7 +62,7 @@
             this.button1.BackColor = System.Drawing.Color.DodgerBlue;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(43, 427);
+            this.button1.Location = new System.Drawing.Point(43, 468);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
@@ -79,7 +85,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(40, 282);
+            this.label4.Location = new System.Drawing.Point(40, 318);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(66, 15);
             this.label4.TabIndex = 4;
@@ -89,7 +95,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(40, 322);
+            this.label5.Location = new System.Drawing.Point(40, 358);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(72, 15);
             this.label5.TabIndex = 5;
@@ -99,7 +105,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(40, 357);
+            this.label6.Location = new System.Drawing.Point(40, 393);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(73, 15);
             this.label6.TabIndex = 6;
@@ -113,20 +119,11 @@
             this.txtNombre.Size = new System.Drawing.Size(100, 23);
             this.txtNombre.TabIndex = 8;
             // 
-            // txtCantidad
-            // 
-            this.txtCantidad.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCantidad.Location = new System.Drawing.Point(117, 282);
-            this.txtCantidad.Name = "txtCantidad";
-            this.txtCantidad.Size = new System.Drawing.Size(41, 23);
-            this.txtCantidad.TabIndex = 10;
-            this.txtCantidad.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
-            // 
             // cbSubcategoria
             // 
             this.cbSubcategoria.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbSubcategoria.FormattingEnabled = true;
-            this.cbSubcategoria.Location = new System.Drawing.Point(117, 319);
+            this.cbSubcategoria.Location = new System.Drawing.Point(117, 355);
             this.cbSubcategoria.Name = "cbSubcategoria";
             this.cbSubcategoria.Size = new System.Drawing.Size(184, 23);
             this.cbSubcategoria.TabIndex = 13;
@@ -136,7 +133,7 @@
             // 
             this.cbSeccion.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbSeccion.FormattingEnabled = true;
-            this.cbSeccion.Location = new System.Drawing.Point(117, 357);
+            this.cbSeccion.Location = new System.Drawing.Point(117, 393);
             this.cbSeccion.Name = "cbSeccion";
             this.cbSeccion.Size = new System.Drawing.Size(41, 23);
             this.cbSeccion.TabIndex = 14;
@@ -145,7 +142,7 @@
             // 
             this.cbEstante.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbEstante.FormattingEnabled = true;
-            this.cbEstante.Location = new System.Drawing.Point(175, 357);
+            this.cbEstante.Location = new System.Drawing.Point(175, 393);
             this.cbEstante.Name = "cbEstante";
             this.cbEstante.Size = new System.Drawing.Size(63, 23);
             this.cbEstante.TabIndex = 15;
@@ -154,7 +151,7 @@
             // 
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(141, 426);
+            this.button2.Location = new System.Drawing.Point(141, 467);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 16;
@@ -196,7 +193,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(40, 207);
+            this.label8.Location = new System.Drawing.Point(40, 205);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(77, 15);
             this.label8.TabIndex = 20;
@@ -207,7 +204,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(40, 248);
+            this.label9.Location = new System.Drawing.Point(40, 284);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(139, 15);
             this.label9.TabIndex = 21;
@@ -240,7 +237,7 @@
             // txtCaracteristicaE
             // 
             this.txtCaracteristicaE.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCaracteristicaE.Location = new System.Drawing.Point(185, 246);
+            this.txtCaracteristicaE.Location = new System.Drawing.Point(185, 282);
             this.txtCaracteristicaE.Name = "txtCaracteristicaE";
             this.txtCaracteristicaE.Size = new System.Drawing.Size(149, 23);
             this.txtCaracteristicaE.TabIndex = 25;
@@ -248,16 +245,65 @@
             // txtCapacidad
             // 
             this.txtCapacidad.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCapacidad.Location = new System.Drawing.Point(123, 202);
+            this.txtCapacidad.Location = new System.Drawing.Point(117, 202);
             this.txtCapacidad.Name = "txtCapacidad";
             this.txtCapacidad.Size = new System.Drawing.Size(100, 23);
             this.txtCapacidad.TabIndex = 26;
+            // 
+            // numCantidadStock
+            // 
+            this.numCantidadStock.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numCantidadStock.Location = new System.Drawing.Point(117, 318);
+            this.numCantidadStock.Name = "numCantidadStock";
+            this.numCantidadStock.Size = new System.Drawing.Size(56, 23);
+            this.numCantidadStock.TabIndex = 27;
+            // 
+            // lblCantMinStock
+            // 
+            this.lblCantMinStock.AutoSize = true;
+            this.lblCantMinStock.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCantMinStock.Location = new System.Drawing.Point(40, 438);
+            this.lblCantMinStock.Name = "lblCantMinStock";
+            this.lblCantMinStock.Size = new System.Drawing.Size(174, 15);
+            this.lblCantMinStock.TabIndex = 28;
+            this.lblCantMinStock.Text = "Cantidad mínima de stock";
+            // 
+            // numCantMinStock
+            // 
+            this.numCantMinStock.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numCantMinStock.Location = new System.Drawing.Point(220, 436);
+            this.numCantMinStock.Name = "numCantMinStock";
+            this.numCantMinStock.Size = new System.Drawing.Size(52, 23);
+            this.numCantMinStock.TabIndex = 29;
+            // 
+            // lblTipo
+            // 
+            this.lblTipo.AutoSize = true;
+            this.lblTipo.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTipo.Location = new System.Drawing.Point(43, 245);
+            this.lblTipo.Name = "lblTipo";
+            this.lblTipo.Size = new System.Drawing.Size(35, 15);
+            this.lblTipo.TabIndex = 30;
+            this.lblTipo.Text = "Tipo";
+            // 
+            // txtTipo
+            // 
+            this.txtTipo.Font = new System.Drawing.Font("Arial Rounded MT Bold", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTipo.Location = new System.Drawing.Point(117, 245);
+            this.txtTipo.Name = "txtTipo";
+            this.txtTipo.Size = new System.Drawing.Size(100, 23);
+            this.txtTipo.TabIndex = 31;
             // 
             // FrmAltaArticulo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(374, 466);
+            this.ClientSize = new System.Drawing.Size(374, 516);
+            this.Controls.Add(this.txtTipo);
+            this.Controls.Add(this.lblTipo);
+            this.Controls.Add(this.numCantMinStock);
+            this.Controls.Add(this.lblCantMinStock);
+            this.Controls.Add(this.numCantidadStock);
             this.Controls.Add(this.txtCapacidad);
             this.Controls.Add(this.txtCaracteristicaE);
             this.Controls.Add(this.txtMedidas);
@@ -272,7 +318,6 @@
             this.Controls.Add(this.cbEstante);
             this.Controls.Add(this.cbSeccion);
             this.Controls.Add(this.cbSubcategoria);
-            this.Controls.Add(this.txtCantidad);
             this.Controls.Add(this.txtNombre);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -284,6 +329,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Nuevo artículo";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.numCantidadStock)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numCantMinStock)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -297,7 +344,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtNombre;
-        private System.Windows.Forms.TextBox txtCantidad;
         private System.Windows.Forms.ComboBox cbSubcategoria;
         private System.Windows.Forms.ComboBox cbSeccion;
         private System.Windows.Forms.ComboBox cbEstante;
@@ -312,5 +358,10 @@
         private System.Windows.Forms.TextBox txtMedidas;
         private System.Windows.Forms.TextBox txtCaracteristicaE;
         private System.Windows.Forms.TextBox txtCapacidad;
+        private System.Windows.Forms.NumericUpDown numCantidadStock;
+        private System.Windows.Forms.Label lblCantMinStock;
+        private System.Windows.Forms.NumericUpDown numCantMinStock;
+        private System.Windows.Forms.Label lblTipo;
+        private System.Windows.Forms.TextBox txtTipo;
     }
 }

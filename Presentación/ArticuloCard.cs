@@ -23,13 +23,40 @@ namespace SistemaInventario.Presentación
             Subcategoria subcategoria = CategoriaDA.ObtenerSubcategoriaPorId(articulo.Subcategoria);
             string descripcionUbicacion = UbicacionDA.ObtenerDescripcionUbicacion(articulo.Ubicacion);
             Articulo = articulo;
+            lblNombre.Text = articulo.DescripcionCompleta.ToUpperInvariant();
             stockOriginal = articulo.Stock;
             stockActual = stockOriginal;
             lblStock.Text = stockActual.ToString();
-            lblConteo.Text = ""; 
+            lblConteo.Text = "";
             lblCategoria.Text = subcategoria.Nombre;
             lblUbicacion.Text = descripcionUbicacion;
             lblNombre.Text = articulo.DescripcionCompleta.ToUpperInvariant();
+            TieneStockBajo();
+        }
+        public void TieneStockBajo()
+        {
+            if (Articulo.Stock <= Articulo.StockMinimo)
+            {
+                lblNombre.ForeColor = Color.Red;
+            }
+            else lblNombre.ForeColor = SystemColors.ControlText;
+        }
+
+        public void RecargarArticulo()
+        {
+            Articulo articuloActualizado = ArticuloDA.ObtenerArticuloPorId(Articulo.Id);
+            if (articuloActualizado == null) return;
+            Articulo = articuloActualizado;
+            Subcategoria subcategoria = CategoriaDA.ObtenerSubcategoriaPorId(Articulo.Subcategoria);
+            string descripcionUbicacion = UbicacionDA.ObtenerDescripcionUbicacion(Articulo.Ubicacion);
+            lblNombre.Text = Articulo.DescripcionCompleta.ToUpperInvariant();
+            lblCategoria.Text = subcategoria?.Nombre ?? "Sin categoría";
+            lblUbicacion.Text = descripcionUbicacion ?? "Sin ubicación";
+            stockOriginal = Articulo.Stock;
+            stockActual = stockOriginal;
+            lblStock.Text = stockActual.ToString();
+            lblConteo.Text = string.Empty;
+            TieneStockBajo();
         }
 
         private void UserControl1_Load(object sender, EventArgs e)
@@ -46,6 +73,7 @@ namespace SistemaInventario.Presentación
         private void FrmEditarArticulo(Articulo articulo)
         {
             FrmEditarArticulo frmEditarArticulo = new FrmEditarArticulo(articulo);
+            frmEditarArticulo.ArticuloEditado += RecargarArticulo;
             frmEditarArticulo.Show();
         }
 
@@ -55,7 +83,7 @@ namespace SistemaInventario.Presentación
             ArticuloDA.ActualizarStock(Articulo.Id, diferencia);
             lblConteo.Text = "Stock actualizado";
             lblConteo.ForeColor = Color.Blue;
-
+            RecargarArticulo();
         }
 
         private void MostrarCambioVisual()
@@ -89,7 +117,6 @@ namespace SistemaInventario.Presentación
             stockActual++;
             lblStock.Text = stockActual.ToString();
             MostrarCambioVisual();
-            
         }
 
         private void lblStock_Click(object sender, EventArgs e)
@@ -117,6 +144,11 @@ namespace SistemaInventario.Presentación
         {
             lblConteo.Text = string.Empty;
             lblStock.Text = stockOriginal.ToString();
+            stockActual = stockOriginal;
+            btnActualizarStock.Enabled = false;
+            btnCancelar.Enabled = false;
+
         }
-    }
+
+    }   
 }

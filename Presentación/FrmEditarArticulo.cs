@@ -56,6 +56,7 @@ namespace SistemaInventario.Presentación
             txtCapacidad.Text = articulo.Capacidad;
             txtCaracteristicaE.Text = articulo.CaracteristicaExtra;
             cbCategoria.SelectedValue = articulo.Subcategoria;
+            txtTipo.Text = articulo.Tipo;
         }
 
 
@@ -69,6 +70,8 @@ namespace SistemaInventario.Presentación
         {
 
         }
+
+        public event Action ArticuloEditado;
 
         private void btnActualizar_Click(object sender, EventArgs e)
         {
@@ -86,6 +89,12 @@ namespace SistemaInventario.Presentación
 
             bool siHayCambios =
                 txtNombre.Text != articuloOriginal.Nombre ||
+                txtMarca.Text != articuloOriginal.Marca ||
+                txtModelo.Text != articuloOriginal.Modelo ||
+                txtMedidas.Text != articuloOriginal.Medidas ||
+                txtCapacidad.Text != articuloOriginal.Capacidad ||
+                txtCaracteristicaE.Text != articuloOriginal.CaracteristicaExtra ||
+                txtTipo.Text != articuloOriginal.Tipo ||
                 idSubcategoria != articuloOriginal.Subcategoria ||
                 idUbicacion != articuloOriginal.Ubicacion;
 
@@ -101,7 +110,8 @@ namespace SistemaInventario.Presentación
                     Modelo = txtModelo.Text.ToUpperInvariant(),
                     Medidas = txtMedidas.Text.ToUpperInvariant(),
                     Capacidad = txtCapacidad.Text.ToUpperInvariant(),
-                    CaracteristicaExtra = txtCaracteristicaE.Text.ToUpperInvariant()
+                    CaracteristicaExtra = txtCaracteristicaE.Text.ToUpperInvariant(),
+                    Tipo = txtTipo.Text.ToUpperInvariant()
                 };
 
                 TipoCoincidencia coincidencia = ArticuloDA.ValidarArticuloExistente(articuloEditado);
@@ -112,6 +122,7 @@ namespace SistemaInventario.Presentación
                 if (resultado)
                 {
                     MessageBox.Show("Artículo editado con éxito");
+                    ArticuloEditado?.Invoke();
                     this.Close();
                 }
 

@@ -40,6 +40,7 @@ namespace SistemaInventario.Presentación
             cbEstante.SelectedIndex = -1;
         }
 
+        public event Action<int> ArticuloCreado;
         private void button1_Click(object sender, EventArgs e)
         {
             int idSubcategoria = (int)cbSubcategoria.SelectedValue;
@@ -57,14 +58,16 @@ namespace SistemaInventario.Presentación
             Articulo art = new Articulo
             {
                 Nombre = txtNombre.Text.ToUpperInvariant(),
-                Stock = int.Parse(txtCantidad.Text),
+                Stock = (int)numCantidadStock.Value,
                 Subcategoria = idSubcategoria,
                 Ubicacion = idUbicacion,
                 Marca = txtMarca.Text.ToUpperInvariant(),
                 Modelo = txtModelo.Text.ToUpperInvariant(),
                 Medidas = txtMedidas.Text.ToUpperInvariant(),
                 Capacidad = txtCapacidad.Text.ToUpperInvariant(),
-                CaracteristicaExtra = txtCaracteristicaE.Text.ToUpperInvariant()
+                CaracteristicaExtra = txtCaracteristicaE.Text.ToUpperInvariant(),
+                StockMinimo = (int)numCantMinStock.Value,
+                Tipo = txtTipo.Text.ToUpperInvariant(),
             };
 
             TipoCoincidencia coincidencia = ArticuloDA.ValidarArticuloExistente(art);
@@ -75,6 +78,7 @@ namespace SistemaInventario.Presentación
             if (resultado)
             {
                 MessageBox.Show("Artículo dado de alta exitosamente");
+                ArticuloCreado?.Invoke(art.Id);
                 this.Close();
             }
         }

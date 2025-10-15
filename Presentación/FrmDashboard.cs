@@ -69,10 +69,22 @@ namespace SistemaInventario.Presentación
                 flowLayoutPanel1.Controls.Add(card);
             }
         }
-        
+
+        private void AgregarArticuloAlDashboard(int idArticulo)
+        {
+            Articulo nuevoArticulo = ArticuloDA.ObtenerArticuloPorId(idArticulo);
+            if (nuevoArticulo != null)
+            {
+                var card = new ArticuloCard(nuevoArticulo);
+                flowLayoutPanel1.Controls.Add(card);
+            }
+        }
+
+
         private void button1_Click(object sender, EventArgs e)
         {
             FrmAltaArticulo frmAltaArticulo = new FrmAltaArticulo();
+            frmAltaArticulo.ArticuloCreado += AgregarArticuloAlDashboard;
             frmAltaArticulo.Show();
         }
 
@@ -158,6 +170,11 @@ namespace SistemaInventario.Presentación
                     flowLayoutPanel1.Controls.Add(card);
                 }
             }
+        }
+
+        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
