@@ -1,0 +1,593 @@
+USE [master]
+GO
+/****** Object:  Database [almacen]    Script Date: 20/10/2025 09:07:15 p. m. ******/
+CREATE DATABASE [almacen]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'almacen', FILENAME = N'C:\Users\A123d\almacen.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'almacen_log', FILENAME = N'C:\Users\A123d\almacen_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT
+GO
+ALTER DATABASE [almacen] SET COMPATIBILITY_LEVEL = 150
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [almacen].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [almacen] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [almacen] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [almacen] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [almacen] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [almacen] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [almacen] SET AUTO_CLOSE ON 
+GO
+ALTER DATABASE [almacen] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [almacen] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [almacen] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [almacen] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [almacen] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [almacen] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [almacen] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [almacen] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [almacen] SET  ENABLE_BROKER 
+GO
+ALTER DATABASE [almacen] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [almacen] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [almacen] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [almacen] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [almacen] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [almacen] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [almacen] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [almacen] SET RECOVERY SIMPLE 
+GO
+ALTER DATABASE [almacen] SET  MULTI_USER 
+GO
+ALTER DATABASE [almacen] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [almacen] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [almacen] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [almacen] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [almacen] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [almacen] SET ACCELERATED_DATABASE_RECOVERY = OFF  
+GO
+ALTER DATABASE [almacen] SET QUERY_STORE = OFF
+GO
+USE [almacen]
+GO
+/****** Object:  Table [dbo].[articulos]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[articulos](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[nombre] [nvarchar](100) NOT NULL,
+	[stock] [int] NOT NULL,
+	[subcategoria_id] [int] NOT NULL,
+	[ubicacion_id] [int] NOT NULL,
+	[marca] [nvarchar](100) NULL,
+	[modelo] [nvarchar](100) NULL,
+	[medidas] [nvarchar](100) NULL,
+	[capacidad] [nvarchar](100) NULL,
+	[caracteristica_extra] [nvarchar](100) NULL,
+	[stock_minimo] [int] NULL,
+	[tipo] [nchar](100) NULL,
+ CONSTRAINT [PK_articulos] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[categoria]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[categoria](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[nombre] [nchar](100) NOT NULL,
+ CONSTRAINT [PK_categoria] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[estantes]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[estantes](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[nombre] [varchar](100) NULL,
+ CONSTRAINT [PK_estantes] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[movimientos]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[movimientos](
+	[id] [int] NOT NULL,
+	[tipo] [bit] NOT NULL,
+	[fecha] [datetime] NOT NULL,
+	[cantidad] [int] NOT NULL,
+	[articulo_id] [int] IDENTITY(1,1) NOT NULL,
+	[ubicacion_id] [int] NOT NULL,
+ CONSTRAINT [PK_movimientos] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[secciones]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[secciones](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[nombre] [varchar](100) NOT NULL,
+ CONSTRAINT [PK_secciones] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[subcategoria]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[subcategoria](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[nombre] [varchar](50) NULL,
+	[categoria_id] [int] NULL,
+ CONSTRAINT [PK__subcateg__3213E83FBB250BE2] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ubicacion]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ubicacion](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[seccion_id] [int] NOT NULL,
+	[estante_id] [int] NOT NULL,
+	[descripcion] [varchar](max) NULL,
+ CONSTRAINT [PK_ubicacion] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[articulos] ON 
+
+INSERT [dbo].[articulos] ([id], [nombre], [stock], [subcategoria_id], [ubicacion_id], [marca], [modelo], [medidas], [capacidad], [caracteristica_extra], [stock_minimo], [tipo]) VALUES (2053, N'MOUSE', 20, 1, 6, N'DELL', N'', N'', N'', N'', 6, N'INHALÁMBRICO                                                                                        ')
+INSERT [dbo].[articulos] ([id], [nombre], [stock], [subcategoria_id], [ubicacion_id], [marca], [modelo], [medidas], [capacidad], [caracteristica_extra], [stock_minimo], [tipo]) VALUES (2054, N'TECLADO', 15, 1, 6, N'DELL', N'', N'', N'', N'', 5, N'ALÁMBRICO                                                                                           ')
+INSERT [dbo].[articulos] ([id], [nombre], [stock], [subcategoria_id], [ubicacion_id], [marca], [modelo], [medidas], [capacidad], [caracteristica_extra], [stock_minimo], [tipo]) VALUES (2055, N'MONITOR', 5, 17, 2, N'ELO', N'', N'', N'', N'', 2, N'                                                                                                    ')
+INSERT [dbo].[articulos] ([id], [nombre], [stock], [subcategoria_id], [ubicacion_id], [marca], [modelo], [medidas], [capacidad], [caracteristica_extra], [stock_minimo], [tipo]) VALUES (2056, N'IMPRESORA', 5, 5, 3, N'ZEBRA', N'ZT230', N'', N'', N'', 3, N'                                                                                                    ')
+INSERT [dbo].[articulos] ([id], [nombre], [stock], [subcategoria_id], [ubicacion_id], [marca], [modelo], [medidas], [capacidad], [caracteristica_extra], [stock_minimo], [tipo]) VALUES (2057, N'IMPRESORA', 5, 5, 2, N'ZEBRA', N'ZT231', N'', N'', N'', 2, N'                                                                                                    ')
+INSERT [dbo].[articulos] ([id], [nombre], [stock], [subcategoria_id], [ubicacion_id], [marca], [modelo], [medidas], [capacidad], [caracteristica_extra], [stock_minimo], [tipo]) VALUES (2058, N'CABLE DISPLAYPORT', 10, 17, 2, N'', N'', N'2 M', N'', N'USO RUDO', 4, N'                                                                                                    ')
+INSERT [dbo].[articulos] ([id], [nombre], [stock], [subcategoria_id], [ubicacion_id], [marca], [modelo], [medidas], [capacidad], [caracteristica_extra], [stock_minimo], [tipo]) VALUES (2059, N'RIBBON', 5, 8, 3, N'', N'', N'CHICO', N'', N'', 2, N'                                                                                                    ')
+INSERT [dbo].[articulos] ([id], [nombre], [stock], [subcategoria_id], [ubicacion_id], [marca], [modelo], [medidas], [capacidad], [caracteristica_extra], [stock_minimo], [tipo]) VALUES (2060, N'CABLE HDMI', 5, 17, 2, N'', N'', N'4M', N'', N'', 2, N'                                                                                                    ')
+SET IDENTITY_INSERT [dbo].[articulos] OFF
+GO
+SET IDENTITY_INSERT [dbo].[categoria] ON 
+
+INSERT [dbo].[categoria] ([id], [nombre]) VALUES (3, N'Equipamiento de cómputo                                                                             ')
+INSERT [dbo].[categoria] ([id], [nombre]) VALUES (4, N'Impresión y Escaneo                                                                                 ')
+INSERT [dbo].[categoria] ([id], [nombre]) VALUES (5, N'Consumibles y Refacciones                                                                           ')
+INSERT [dbo].[categoria] ([id], [nombre]) VALUES (6, N'Conectividad y Red                                                                                  ')
+INSERT [dbo].[categoria] ([id], [nombre]) VALUES (7, N'Herramientas y Utilería                                                                             ')
+SET IDENTITY_INSERT [dbo].[categoria] OFF
+GO
+SET IDENTITY_INSERT [dbo].[estantes] ON 
+
+INSERT [dbo].[estantes] ([id], [nombre]) VALUES (1, N'A1')
+INSERT [dbo].[estantes] ([id], [nombre]) VALUES (2, N'B1')
+INSERT [dbo].[estantes] ([id], [nombre]) VALUES (3, N'C1')
+SET IDENTITY_INSERT [dbo].[estantes] OFF
+GO
+SET IDENTITY_INSERT [dbo].[secciones] ON 
+
+INSERT [dbo].[secciones] ([id], [nombre]) VALUES (1, N'1')
+INSERT [dbo].[secciones] ([id], [nombre]) VALUES (2, N'2')
+INSERT [dbo].[secciones] ([id], [nombre]) VALUES (3, N'3')
+INSERT [dbo].[secciones] ([id], [nombre]) VALUES (4, N'4')
+SET IDENTITY_INSERT [dbo].[secciones] OFF
+GO
+SET IDENTITY_INSERT [dbo].[subcategoria] ON 
+
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (1, N'Periféricos de entrada', 3)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (2, N'PC de escritorio y Laptops', 3)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (3, N'Fuentes de alimentación', 3)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (4, N'Almacenamiento y memoria', 3)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (5, N'Impresoras térmicas', 4)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (6, N'Impresoras de Oficina', 4)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (7, N'Cableado de Impresión y Escaneo', 4)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (8, N'Consumibles de impresoras térmicas', 5)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (9, N'Consumibles de impresoras de Oficina', 5)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (10, N'Refacciones de impresoras térmicas', 5)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (11, N'Refacciones de PC', 5)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (12, N'Cables de red', 6)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (13, N'Dispositivos de red', 6)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (14, N'Utilería de trabajo', 7)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (15, N'Herramientas básicas', 7)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (16, N'Adaptadores genéricos', 7)
+INSERT [dbo].[subcategoria] ([id], [nombre], [categoria_id]) VALUES (17, N'Periféricos de salida', 3)
+SET IDENTITY_INSERT [dbo].[subcategoria] OFF
+GO
+SET IDENTITY_INSERT [dbo].[ubicacion] ON 
+
+INSERT [dbo].[ubicacion] ([id], [seccion_id], [estante_id], [descripcion]) VALUES (1, 1, 1, N'')
+INSERT [dbo].[ubicacion] ([id], [seccion_id], [estante_id], [descripcion]) VALUES (2, 2, 2, N'')
+INSERT [dbo].[ubicacion] ([id], [seccion_id], [estante_id], [descripcion]) VALUES (3, 2, 3, N'')
+INSERT [dbo].[ubicacion] ([id], [seccion_id], [estante_id], [descripcion]) VALUES (4, 3, 1, N'')
+INSERT [dbo].[ubicacion] ([id], [seccion_id], [estante_id], [descripcion]) VALUES (5, 3, 2, N'')
+INSERT [dbo].[ubicacion] ([id], [seccion_id], [estante_id], [descripcion]) VALUES (6, 1, 2, N'')
+INSERT [dbo].[ubicacion] ([id], [seccion_id], [estante_id], [descripcion]) VALUES (7, 2, 1, N'')
+INSERT [dbo].[ubicacion] ([id], [seccion_id], [estante_id], [descripcion]) VALUES (8, 1, 3, N'')
+INSERT [dbo].[ubicacion] ([id], [seccion_id], [estante_id], [descripcion]) VALUES (9, 3, 3, N'')
+INSERT [dbo].[ubicacion] ([id], [seccion_id], [estante_id], [descripcion]) VALUES (10, 4, 1, N'')
+INSERT [dbo].[ubicacion] ([id], [seccion_id], [estante_id], [descripcion]) VALUES (1010, 4, 3, N'')
+SET IDENTITY_INSERT [dbo].[ubicacion] OFF
+GO
+ALTER TABLE [dbo].[articulos] ADD  CONSTRAINT [DF_articulos_stock_minimo]  DEFAULT ((0)) FOR [stock_minimo]
+GO
+ALTER TABLE [dbo].[articulos]  WITH CHECK ADD  CONSTRAINT [FK_subcategoria_articulos] FOREIGN KEY([subcategoria_id])
+REFERENCES [dbo].[subcategoria] ([id])
+GO
+ALTER TABLE [dbo].[articulos] CHECK CONSTRAINT [FK_subcategoria_articulos]
+GO
+ALTER TABLE [dbo].[articulos]  WITH CHECK ADD  CONSTRAINT [FK_ubicacion_articulos] FOREIGN KEY([ubicacion_id])
+REFERENCES [dbo].[ubicacion] ([id])
+GO
+ALTER TABLE [dbo].[articulos] CHECK CONSTRAINT [FK_ubicacion_articulos]
+GO
+ALTER TABLE [dbo].[movimientos]  WITH CHECK ADD  CONSTRAINT [FK_articulo_movimientos] FOREIGN KEY([articulo_id])
+REFERENCES [dbo].[articulos] ([id])
+GO
+ALTER TABLE [dbo].[movimientos] CHECK CONSTRAINT [FK_articulo_movimientos]
+GO
+ALTER TABLE [dbo].[movimientos]  WITH CHECK ADD  CONSTRAINT [FK_ubicacion_movimiento] FOREIGN KEY([id])
+REFERENCES [dbo].[ubicacion] ([id])
+GO
+ALTER TABLE [dbo].[movimientos] CHECK CONSTRAINT [FK_ubicacion_movimiento]
+GO
+ALTER TABLE [dbo].[subcategoria]  WITH CHECK ADD  CONSTRAINT [FK_categoria_subcategoria] FOREIGN KEY([categoria_id])
+REFERENCES [dbo].[categoria] ([id])
+GO
+ALTER TABLE [dbo].[subcategoria] CHECK CONSTRAINT [FK_categoria_subcategoria]
+GO
+ALTER TABLE [dbo].[ubicacion]  WITH CHECK ADD  CONSTRAINT [FK_estante_ubicacion] FOREIGN KEY([estante_id])
+REFERENCES [dbo].[estantes] ([id])
+GO
+ALTER TABLE [dbo].[ubicacion] CHECK CONSTRAINT [FK_estante_ubicacion]
+GO
+ALTER TABLE [dbo].[ubicacion]  WITH CHECK ADD  CONSTRAINT [FK_seccion_ubicacion] FOREIGN KEY([seccion_id])
+REFERENCES [dbo].[secciones] ([id])
+GO
+ALTER TABLE [dbo].[ubicacion] CHECK CONSTRAINT [FK_seccion_ubicacion]
+GO
+/****** Object:  StoredProcedure [dbo].[ActualizarArticulo]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ActualizarArticulo]
+    @Id INT,
+    @Nombre NVARCHAR(100),
+    @SubcategoriaId INT,
+    @UbicacionId INT,
+    @Marca NVARCHAR(100) = NULL,
+    @Modelo NVARCHAR(100) = NULL,
+    @Medidas NVARCHAR(100) = NULL,
+    @Capacidad NVARCHAR(100) = NULL,
+    @CaracteristicaExtra NVARCHAR(200) = NULL,
+    @Tipo NVARCHAR(100) = NULL
+AS
+BEGIN
+    UPDATE Articulos
+    SET Nombre = @Nombre,
+        subcategoria_id = @SubcategoriaId,
+        ubicacion_id = @UbicacionId,
+        Marca = @Marca,
+        Modelo = @Modelo,
+        Medidas = @Medidas,
+        Capacidad = @Capacidad,
+        caracteristica_extra = @CaracteristicaExtra,
+        Tipo = @Tipo
+    WHERE id = @Id
+
+    SELECT * FROM Articulos WHERE id = @Id
+END
+GO
+/****** Object:  StoredProcedure [dbo].[ActualizarStock]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ActualizarStock]
+    @ArticuloId INT,
+    @CantidadCambio INT
+AS
+BEGIN
+    DECLARE @StockActual INT
+    SELECT @StockActual = Stock FROM Articulos WHERE id = @ArticuloId
+
+    DECLARE @NuevoStock INT = @StockActual + @CantidadCambio
+    IF @NuevoStock < 0 SET @NuevoStock = 0
+
+    UPDATE Articulos SET Stock = @NuevoStock WHERE id = @ArticuloId
+
+    SELECT * FROM Articulos WHERE id = @ArticuloId
+END
+
+GO
+/****** Object:  StoredProcedure [dbo].[BuscarArticulos]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[BuscarArticulos]
+    @Nombre NVARCHAR(100) = NULL,
+    @IdCategoria INT = NULL,
+    @IdSubcategoria INT = NULL
+AS
+BEGIN
+    SELECT * FROM Articulos
+    WHERE (@Nombre IS NULL OR Nombre LIKE '%' + @Nombre + '%')
+      AND (@IdSubcategoria IS NULL OR subcategoria_id = @IdSubcategoria)
+      AND (@IdCategoria IS NULL OR subcategoria_id IN (
+          SELECT Id FROM Subcategoria WHERE categoria_id = @IdCategoria
+      ))
+END
+GO
+/****** Object:  StoredProcedure [dbo].[BuscarUbicacion]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[BuscarUbicacion]
+    @Id INT = NULL,
+    @SeccionId INT = NULL,
+    @EstanteId INT = NULL
+AS
+BEGIN
+    SELECT * FROM Ubicacion
+    WHERE (@Id IS NULL OR Id = @Id)
+      AND (@SeccionId IS NULL OR Seccion_Id = @SeccionId)
+      AND (@EstanteId IS NULL OR Estante_Id = @EstanteId)
+END
+GO
+/****** Object:  StoredProcedure [dbo].[CrearUbicacion]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[CrearUbicacion]
+    @SeccionId INT,
+    @EstanteId INT,
+    @Descripcion NVARCHAR(200)
+AS
+BEGIN
+    INSERT INTO Ubicacion (Seccion_Id, Estante_Id, Descripcion)
+    OUTPUT INSERTED.Id
+    VALUES (@SeccionId, @EstanteId, @Descripcion)
+END
+GO
+/****** Object:  StoredProcedure [dbo].[InsertarArticulo]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[InsertarArticulo]
+    @Nombre NVARCHAR(100),
+    @Stock INT,
+    @SubcategoriaId INT,
+    @UbicacionId INT,
+    @Marca NVARCHAR(100) = NULL,
+    @Modelo NVARCHAR(100) = NULL,
+    @Medidas NVARCHAR(100) = NULL,
+    @Capacidad NVARCHAR(100) = NULL,
+    @CaracteristicaExtra NVARCHAR(200) = NULL,
+    @StockMinimo INT = NULL,
+    @Tipo NVARCHAR(100) = NULL
+AS
+BEGIN
+    INSERT INTO Articulos (nombre, stock, subcategoria_id, ubicacion_id, marca, modelo, medidas, capacidad, caracteristica_extra, stock_minimo, tipo)
+    VALUES (@Nombre, @Stock, @subcategoriaId, @UbicacionId, @Marca, @Modelo, @Medidas, @Capacidad, @CaracteristicaExtra, @StockMinimo, @Tipo)
+END
+GO
+/****** Object:  StoredProcedure [dbo].[ObtenerArticuloPorId]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ObtenerArticuloPorId]
+    @IdArticulo INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        Id,
+        Nombre,
+        Stock,
+        stock_minimo,
+        subcategoria_id,
+        ubicacion_id,
+        marca,
+        modelo,
+        medidas,
+        capacidad,
+        caracteristica_extra,
+        tipo
+    FROM Articulos
+    WHERE Id = @IdArticulo;
+END
+GO
+/****** Object:  StoredProcedure [dbo].[ObtenerCatalogoUbicacion]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ObtenerCatalogoUbicacion]
+    @Tipo NVARCHAR(20)
+AS
+BEGIN
+    IF @Tipo = 'Seccion'
+        SELECT Id, Nombre FROM Secciones
+    ELSE IF @Tipo = 'Estante'
+        SELECT Id, Nombre FROM Estantes
+END
+GO
+/****** Object:  StoredProcedure [dbo].[ObtenerStockActual]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ObtenerStockActual]
+    @ArticuloId INT
+AS
+BEGIN
+    SELECT Stock FROM Articulos WHERE id = @ArticuloId
+END
+GO
+/****** Object:  StoredProcedure [dbo].[ObtenerSubcategoriaPorId]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ObtenerSubcategoriaPorId]
+    @Id INT
+AS
+BEGIN
+    SELECT Id, Nombre, Categoria_Id FROM Subcategoria WHERE Id = @Id
+END
+GO
+/****** Object:  StoredProcedure [dbo].[ObtenerSubcategoriasPorIdCategoria]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ObtenerSubcategoriasPorIdCategoria]
+    @IdCategoria INT
+AS
+BEGIN
+    SELECT Id, Nombre, Categoria_Id FROM Subcategoria WHERE Categoria_Id = @IdCategoria
+END
+GO
+/****** Object:  StoredProcedure [dbo].[ObtenerTodasLasCategorias]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ObtenerTodasLasCategorias]
+AS
+BEGIN
+    SELECT Id, Nombre FROM Categoria
+END
+GO
+/****** Object:  StoredProcedure [dbo].[ObtenerTodasLasSubcategorias]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ObtenerTodasLasSubcategorias]
+AS
+BEGIN
+    SELECT Id, Nombre, Categoria_Id FROM Subcategoria
+END
+GO
+/****** Object:  StoredProcedure [dbo].[ObtenerTodosLosArticulos]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ObtenerTodosLosArticulos]
+AS
+BEGIN
+    SELECT * FROM Articulos
+END
+GO
+/****** Object:  StoredProcedure [dbo].[ValidarArticuloExistente]    Script Date: 20/10/2025 09:07:16 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[ValidarArticuloExistente]
+    @Id INT = NULL,
+    @Nombre NVARCHAR(100),
+    @Marca NVARCHAR(100) = NULL,
+    @Modelo NVARCHAR(100) = NULL,
+    @Medidas NVARCHAR(100) = NULL,
+    @Capacidad NVARCHAR(100) = NULL,
+    @CaracteristicaExtra NVARCHAR(200) = NULL,
+    @Tipo NVARCHAR(100) = NULL
+AS
+BEGIN
+    SELECT TOP 1 'Exacto' AS TipoCoincidencia, Id
+    FROM Articulos
+    WHERE UPPER(Nombre) = UPPER(@Nombre)
+      AND UPPER(ISNULL(Marca, '')) = UPPER(ISNULL(@Marca, ''))
+      AND UPPER(ISNULL(Modelo, '')) = UPPER(ISNULL(@Modelo, ''))
+      AND UPPER(ISNULL(Medidas, '')) = UPPER(ISNULL(@Medidas, ''))
+      AND UPPER(ISNULL(Capacidad, '')) = UPPER(ISNULL(@Capacidad, ''))
+      AND UPPER(ISNULL(caracteristica_extra, '')) = UPPER(ISNULL(@CaracteristicaExtra, ''))
+      AND UPPER(ISNULL(Tipo, '')) = UPPER(ISNULL(@Tipo, ''))
+
+      AND (@Id IS NULL OR Id <> @Id)
+
+    UNION
+
+    SELECT TOP 1 'Atributos' AS TipoCoincidencia, Id
+    FROM Articulos
+    WHERE ISNULL(Marca, '') = ISNULL(@Marca, '')
+      AND ISNULL(Modelo, '') = ISNULL(@Modelo, '')
+      AND ISNULL(Medidas, '') = ISNULL(@Medidas, '')
+      AND ISNULL(Capacidad, '') = ISNULL(@Capacidad, '')
+      AND ISNULL(caracteristica_extra, '') = ISNULL(@CaracteristicaExtra, '')
+      AND ISNULL(Tipo, '') = ISNULL(@Tipo, '')
+      AND (@Id IS NULL OR Id <> @Id)
+END
+GO
+USE [master]
+GO
+ALTER DATABASE [almacen] SET  READ_WRITE 
+GO
